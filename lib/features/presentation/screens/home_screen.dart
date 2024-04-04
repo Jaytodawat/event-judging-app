@@ -14,14 +14,12 @@ class HomeScreen extends StatelessWidget {
     final List<Event> eventList = Provider.of<EventListModel>(context).events;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text(
             'Events',
             style: TextStyle(color: Colors.white),
           ),
           centerTitle: true,
-          backgroundColor: Colors.black,
         ),
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
