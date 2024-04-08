@@ -16,4 +16,10 @@ TextStyle kButtonStyle = const TextStyle(
   fontSize: 18
 );
 
+TextStyle kTitle = const TextStyle(
+  color: Colors.white,
+  fontWeight: FontWeight.bold,
+  fontSize: 20
+);
+
 Color kFaintWhite = Colors.white60;

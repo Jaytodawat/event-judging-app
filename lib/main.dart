@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:judge_assist_app/features/presentation/providers/event_provider.dart';
+import 'package:judge_assist_app/features/presentation/screens/LoginScreen.dart';
 import 'package:judge_assist_app/features/presentation/screens/create_team.dart';
 import 'package:judge_assist_app/features/presentation/screens/event_screen.dart';
 import 'package:judge_assist_app/features/presentation/screens/home_screen.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       title: 'Judge Assist',
-      home: AdminHomeScreen(),
+      home: LoginScreen(),
     );
   }
 }
