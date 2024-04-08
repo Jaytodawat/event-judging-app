@@ -14,32 +14,35 @@ class EventScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final List<Event> events = Provider.of<EventListModel>(context).events;
     final Event event = events[eventIndex];
     final List<Team> teams = event.teams;
-    // print(teams.length);
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(
             event.name,
             style: const TextStyle(color: Colors.white),
           ),
           centerTitle: true,
-          backgroundColor: Colors.black,
         ),
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: teams.isEmpty ? const Center(child: Text('No Data', style: TextStyle(color: Colors.grey, fontSize: 24),),):Consumer<EventListModel>(
-            builder: (context, eventListModel, _) => ListView.builder(
-                itemCount: teams.length,
-                itemBuilder: (context, index) {
-                  Team team = teams[index];
-                  return TeamCard(index: index, team: team);
-                }),
-          ),
+          child: teams.isEmpty
+              ? const Center(
+                  child: Text(
+                    'No Data',
+                    style: TextStyle(color: Colors.grey, fontSize: 24),
+                  ),
+                )
+              : Consumer<EventListModel>(
+                  builder: (context, eventListModel, _) => ListView.builder(
+                      itemCount: teams.length,
+                      itemBuilder: (context, index) {
+                        Team team = teams[index];
+                        return TeamCard(index: index, team: team);
+                      }),
+                ),
         ),
         bottomNavigationBar: RoundedButton(
           text: "Create and Judge Team",
@@ -47,7 +50,7 @@ class EventScreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>CreateTeamScreen(event: event),
+                builder: (context) => CreateTeamScreen(event: event),
               ),
             );
           },
