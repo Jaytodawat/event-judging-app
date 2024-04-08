@@ -5,6 +5,7 @@ class Event{
   String name;
   List<String> parameterList;
   List<Team> teams;
+  // List<Judge> judges;
 
   Event(this.id, this.name, this.parameterList, this.teams);
 }
