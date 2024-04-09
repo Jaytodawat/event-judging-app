@@ -6,17 +6,16 @@ import 'package:judge_assist_app/features/domain/entities/Team.dart';
 import 'package:judge_assist_app/features/presentation/providers/event_provider.dart';
 import 'package:judge_assist_app/features/presentation/widgets/reusable_textfields.dart';
 
-class CreateTeamScreen extends StatelessWidget {
+class UpdateTeamScreen extends StatelessWidget {
   final Event event;
-  CreateTeamScreen({super.key, required this.event});
+  final Team team;
+  UpdateTeamScreen({super.key, required this.event, required this.team});
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController idController = TextEditingController();
+  // final TextEditingController nameController = TextEditingController();
+  // final TextEditingController idController = TextEditingController();
   late final List<String> parameters;
 
   void _addTeam(Team team, List<CustomTextField> inputList) {
-    team.name = nameController.text;
-    team.id = int.parse(idController.text);
     int total = 0;
     for (int i = 0; i < inputList.length; i++) {
       CustomTextField customTextField = inputList[i];
@@ -26,14 +25,11 @@ class CreateTeamScreen extends StatelessWidget {
       total += score;
     }
     team.marks["total"] = total;
-    event.teams.add(team);
   }
 
   @override
   Widget build(BuildContext context) {
     parameters = event.parameterList;
-    Team team = Team();
-    team.marks = <String, int>{};
     List<CustomTextField> inputList = [];
     return SafeArea(
       child: Scaffold(
@@ -59,38 +55,30 @@ class CreateTeamScreen extends StatelessWidget {
                   height: 20,
                 ),
                 const Text(
-                  'Create Team And Judge',
+                  'Edit or Fill Marks',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 26,
+                    fontSize: 24,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(
-                  height: 5,
+                  height: 20,
                 ),
-                ReusableTextField(
-                  controller: idController,
-                  labelText: 'Team Id',
-                  obsecureText: false,
-                  icon: const Icon(
-                    Icons.numbers,
-                  ),
-                ),
+                Text('Team Id : ${team.id}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                 const SizedBox(
                   height: 20,
                 ),
-                ReusableTextField(
-                  controller: nameController,
-                  labelText: 'Team Name',
-                  obsecureText: false,
-                  icon: const Icon(
-                    Icons.groups,
-                  ),
-                ),
+                Text('Team Name : ${team.name}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                 const SizedBox(
                   height: 20,
                 ),
+
+                Text('Parameters : ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                const SizedBox(
+                  height: 20,
+                ),
+
                 Expanded(
                   child: ListView.builder(
                     itemCount: parameters.length,

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:judge_assist_app/features/presentation/providers/event_provider.dart';
-import 'package:judge_assist_app/features/presentation/screens/AddTeam.dart';
-import 'package:judge_assist_app/features/presentation/screens/CreateEventScreen.dart';
+import 'package:judge_assist_app/features/presentation/screens/Admin/AddTeam.dart';
+import 'package:judge_assist_app/features/presentation/screens/Admin/CreateEventScreen.dart';
 import 'package:judge_assist_app/features/presentation/screens/LoginScreen.dart';
-import 'package:judge_assist_app/features/presentation/screens/create_team.dart';
-import 'package:judge_assist_app/features/presentation/screens/event_screen.dart';
-import 'package:judge_assist_app/features/presentation/screens/home_screen.dart';
+// import 'package:judge_assist_app/features/presentation/screens/create_team.dart';
+import 'package:judge_assist_app/features/presentation/screens/Judge/event_screen.dart';
+import 'package:judge_assist_app/features/presentation/screens/Judge/home_screen.dart';
 import 'package:provider/provider.dart';
 
-import 'features/presentation/screens/AdminHomeScreen.dart';
+import 'features/presentation/screens/Admin/AdminHomeScreen.dart';
 
 
 
@@ -28,11 +28,14 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: const Color(0xFF0F0F1F),
           appBarTheme: const AppBarTheme(
             color: Color(0xFF1D1D2F),
+            iconTheme: IconThemeData(
+              color: Colors.white, // Change this color to your desired color
+            ),
           )
         ),
         debugShowCheckedModeBanner: false,
         title: 'Judge Assist',
-        home: CreateEventScreen(),
+        home: LoginScreen(),
       ),
     );
   }

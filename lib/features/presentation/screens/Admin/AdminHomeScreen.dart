@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:judge_assist_app/constants.dart';
-import 'package:judge_assist_app/features/presentation/screens/event_screen.dart';
-import 'package:judge_assist_app/features/presentation/screens/home_screen.dart';
+import 'package:judge_assist_app/features/presentation/screens/Admin/admin_event_list_screen.dart';
+import 'package:judge_assist_app/features/presentation/screens/Judge/event_screen.dart';
+import 'package:judge_assist_app/features/presentation/screens/Judge/home_screen.dart';
 
 class AdminHomeScreen extends StatelessWidget {
   const AdminHomeScreen({super.key});
@@ -10,7 +11,7 @@ class AdminHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Admin Screen",
+          title: const Text("Admin Screen",
           style: TextStyle(
             // color: Color(0xFFff0049)
             color: Colors.white
@@ -24,7 +25,7 @@ class AdminHomeScreen extends StatelessWidget {
           children: [
             TextButton(onPressed: (){}, child: Text("Register Event",style: kButtonStyle,)),
             TextButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => EventListScreen()));
             }, child: Text("View All Events",style: kButtonStyle,),)
           ],
         ),

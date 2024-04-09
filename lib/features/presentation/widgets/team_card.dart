@@ -3,11 +3,13 @@ import 'package:judge_assist_app/features/domain/entities/Event.dart';
 
 import '../../domain/entities/Team.dart';
 import '../../../constants.dart';
+import '../screens/Judge/update_team.dart';
 
 class TeamCard extends StatelessWidget {
-  final int index;
+  final Event event;
   final Team team;
-  const TeamCard({super.key, required this.index, required this.team});
+  final void Function() onTap;
+  const TeamCard({super.key,  required this.team, required this.event, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -64,17 +66,7 @@ class TeamCard extends StatelessWidget {
           ),
         ),
       ),
-      onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => StationDetailScreen(
-        //       station: station,
-        //       stationIndex: index,
-        //     ),
-        //   ),
-        // );
-      },
+      onTap: onTap,
     );
   }
 }

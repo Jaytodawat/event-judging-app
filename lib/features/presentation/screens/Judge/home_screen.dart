@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:judge_assist_app/features/presentation/screens/event_screen.dart';
+import 'package:judge_assist_app/features/presentation/screens/Judge/event_screen.dart';
 import 'package:judge_assist_app/features/presentation/widgets/event_card.dart';
 import 'package:judge_assist_app/features/presentation/providers/event_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../../domain/entities/Event.dart';
+import '../../../domain/entities/Event.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -29,14 +29,13 @@ class HomeScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 Event event = eventList[index];
                 return EventCard(
-                  index: index,
                   event: event,
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => EventScreen(
-                          eventIndex: index,
+                          event: event,
                         ),
                       ),
                     );

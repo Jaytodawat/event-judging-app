@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:judge_assist_app/features/domain/entities/Event.dart';
-import 'package:judge_assist_app/features/presentation/screens/event_screen.dart';
+import 'package:judge_assist_app/features/presentation/screens/Judge/event_screen.dart';
 
 import '../../../constants.dart';
 
 class EventCard extends StatelessWidget {
-  final int index;
   final Event event;
   final void Function() onTap;
   const EventCard(
       {super.key,
-      required this.index,
       required this.event,
       required this.onTap});
 
@@ -34,7 +32,7 @@ class EventCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text((index+1).toString(),
+                Text((event.id).toString(),
                 style: kEventCardStyle
                 ),
                 Text(event.name.toString(),

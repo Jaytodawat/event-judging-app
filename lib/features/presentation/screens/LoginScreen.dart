@@ -3,6 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:judge_assist_app/constants.dart';
 import 'package:flip_card/flip_card.dart';
+import 'package:judge_assist_app/features/presentation/screens/Admin/AdminHomeScreen.dart';
+import 'package:judge_assist_app/features/presentation/screens/Admin/admin_event_list_screen.dart';
+import 'package:judge_assist_app/features/presentation/screens/Judge/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -201,7 +204,14 @@ class admin extends StatelessWidget {
             decoration: BoxDecoration(
                 color: Colors.pink, borderRadius: BorderRadius.circular(20.0)),
             child: TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EventListScreen(),
+                  ),
+                );
+              },
               child: Text(
                 "Submit",
                 style: kButtonStyle,
@@ -303,7 +313,14 @@ class judge extends StatelessWidget {
             decoration: BoxDecoration(
                 color: Colors.pink, borderRadius: BorderRadius.circular(20.0)),
             child: TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(),
+                  ),
+                );
+              },
               child: Text(
                 "Submit",
                 style: kButtonStyle,

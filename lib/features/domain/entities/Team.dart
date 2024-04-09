@@ -5,4 +5,6 @@ class Team {
   late String name;
   late Map<String, int> marks;
   late Event event;
+
+  Team(this.id, this.name, this.marks, this.event);
 }

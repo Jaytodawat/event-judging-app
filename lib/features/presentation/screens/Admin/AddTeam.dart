@@ -1,18 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:judge_assist_app/features/domain/entities/Event.dart';
+import 'package:judge_assist_app/features/domain/entities/Team.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/event_provider.dart';
-import '../widgets/custom_buttons.dart';
+import '../../providers/event_provider.dart';
+import '../../widgets/custom_buttons.dart';
 import 'package:judge_assist_app/constants.dart';
 
 class AddTeam extends StatelessWidget {
-  AddTeam({super.key});
+  final Event event;
+  AddTeam({super.key, required this.event});
   final TextEditingController idController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController leaderNameController = TextEditingController();
   final TextEditingController leaderEmailController = TextEditingController();
 
+  void _addTeam(){
+    String id = idController.text;
+    String name = nameController.text;
+    String leaderName = leaderNameController.text;
+    String leaderEmail = leaderEmailController.text;
+    List<String> parameters = event.parameterList;
+    Map<String, int> marks = {};
+    for(int i = 0; i < parameters.length; i++){
+      String parameter = parameters[i];
+      marks[parameter] = 0;
+    }
+    marks["total"] = 0;
+    Team team = Team(int.parse(id), name, marks, event);
+    event.teams.add(team);
+  }
   @override
   Widget build(BuildContext context) {
     double sh = MediaQuery.of(context).size.height;
@@ -55,7 +72,7 @@ class AddTeam extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10.0)),
                         contentPadding: EdgeInsets.zero,
                         label: const Text(
-                          "Event Id",
+                          "Team Id",
                           style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                         )),
@@ -149,10 +166,9 @@ class AddTeam extends StatelessWidget {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      String id = idController.text;
-                      String name = nameController.text;
-                      String leaderName = leaderNameController.text;
-                      String leaderEmail = leaderEmailController.text;
+                      _addTeam();
+                      Provider.of<EventListModel>(context, listen: false).refreshList();
+                      Navigator.pop(context);
                     },
                     child: Text(
                       "Add",

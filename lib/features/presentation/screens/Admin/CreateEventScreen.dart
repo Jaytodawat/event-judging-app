@@ -4,7 +4,7 @@ import 'package:judge_assist_app/features/presentation/widgets/custom_buttons.da
 import 'package:judge_assist_app/features/presentation/widgets/reusable_textfields.dart';
 import 'package:provider/provider.dart';
 import 'package:judge_assist_app/constants.dart';
-import '../providers/event_provider.dart';
+import '../../providers/event_provider.dart';
 
 class CreateEventScreen extends StatelessWidget {
   CreateEventScreen({super.key});
@@ -12,6 +12,18 @@ class CreateEventScreen extends StatelessWidget {
   final TextEditingController idController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController parametersController = TextEditingController();
+
+  Event _addEvent(){
+    String id = idController.text;
+    String name = nameController.text;
+    String parameters = parametersController.text;
+    List<String> parameterList = parameters.split(",");
+    for(int i = 0; i < parameterList.length; i++){
+      parameterList[i] = parameterList[i].trim();
+    }
+    Event event = Event(int.parse(id), name, parameterList, []);
+    return event;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +114,7 @@ class CreateEventScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10.0)),
                         contentPadding: EdgeInsets.zero,
                         label: const Text(
-                          "Judging Parameters (Separated by ,)",
+                          "Parameters",
                           style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                         )),
@@ -117,8 +129,10 @@ class CreateEventScreen extends StatelessWidget {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      String id = idController.text;
-                      String name = nameController.text;
+                      Event event = _addEvent();
+                      eventList.add(event);
+                      Provider.of<EventListModel>(context, listen: false).refreshList();
+                      Navigator.pop(context);
                     },
                     child: Text(
                       "Add",
