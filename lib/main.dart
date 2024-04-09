@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:judge_assist_app/features/presentation/providers/event_provider.dart';
+import 'package:judge_assist_app/features/presentation/screens/AddTeam.dart';
+import 'package:judge_assist_app/features/presentation/screens/CreateEventScreen.dart';
 import 'package:judge_assist_app/features/presentation/screens/LoginScreen.dart';
 import 'package:judge_assist_app/features/presentation/screens/create_team.dart';
 import 'package:judge_assist_app/features/presentation/screens/event_screen.dart';
@@ -20,16 +22,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        scaffoldBackgroundColor: Color(0xFF0F0F1F),
-        appBarTheme: AppBarTheme(
-          color: Color(0xFF1D1D2F),
-        )
+    return SafeArea(
+      child: MaterialApp(
+        theme: ThemeData(
+          scaffoldBackgroundColor: const Color(0xFF0F0F1F),
+          appBarTheme: const AppBarTheme(
+            color: Color(0xFF1D1D2F),
+          )
+        ),
+        debugShowCheckedModeBanner: false,
+        title: 'Judge Assist',
+        home: CreateEventScreen(),
       ),
-      debugShowCheckedModeBanner: false,
-      title: 'Judge Assist',
-      home: LoginScreen(),
     );
   }
 }
