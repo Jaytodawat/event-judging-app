@@ -92,9 +92,9 @@ class EventListModel extends ChangeNotifier{
     _events.clear();
     refreshList();
   }
-  Future<bool> loginJudge(String email, String password) async{
+  Future<String> loginJudge(String email, String password) async{
     Judge judge = Judge.login(email, password);
-    bool check = await apiService.loginJudge(judge);
+    String check = await apiService.loginJudge(judge);
     return check;
   }
 
