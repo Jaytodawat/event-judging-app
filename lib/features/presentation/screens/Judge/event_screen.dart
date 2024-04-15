@@ -9,12 +9,15 @@ import 'package:provider/provider.dart';
 
 class EventScreen extends StatelessWidget {
   final Event event;
-  const EventScreen({super.key, required this.event});
+  final List<Team> teams;
+  final int judgeId;
+  const EventScreen({super.key, required this.event, required this.teams, required this.judgeId});
 
   @override
   Widget build(BuildContext context) {
     final List<Event> events = Provider.of<EventListModel>(context).events;
-    final List<Team> teams = event.teams;
+    // final List<Team> teams = event.teams;
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -45,7 +48,7 @@ class EventScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => UpdateTeamScreen(event: event, team: team),
+                              builder: (context) => UpdateTeamScreen(event: event, team: team, judgeId : judgeId, ),
                             ),
                           );
                         },

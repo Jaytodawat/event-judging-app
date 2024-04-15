@@ -8,7 +8,7 @@ class RoundedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin:  const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      margin:  const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       child: TextButton(
         onPressed: onPressed,
         style: TextButton.styleFrom(
@@ -18,7 +18,7 @@ class RoundedButton extends StatelessWidget {
           backgroundColor: Colors.pink,
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
           child: Text(text,
             style: const TextStyle(
               fontSize: 13,

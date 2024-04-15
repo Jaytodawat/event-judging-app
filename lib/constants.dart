@@ -24,7 +24,7 @@ TextStyle kTitle = const TextStyle(
 
 TextStyle kEventCardStyle = const TextStyle(
   color: Colors.white,
-  fontSize: 18.0,
+  fontSize: 14.0,
 );
 
 Color kFaintWhite = Colors.white60;

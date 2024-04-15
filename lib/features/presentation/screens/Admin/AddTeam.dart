@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:judge_assist_app/features/data/models/TeamScore.dart';
 import 'package:judge_assist_app/features/domain/entities/Event.dart';
 import 'package:judge_assist_app/features/domain/entities/Team.dart';
 import 'package:provider/provider.dart';
 
+import '../../../data/models/TeamModel.dart';
 import '../../providers/event_provider.dart';
 import '../../widgets/custom_buttons.dart';
 import 'package:judge_assist_app/constants.dart';
+
+import 'admin_event_list_screen.dart';
 
 class AddTeam extends StatelessWidget {
   final Event event;
@@ -15,21 +19,30 @@ class AddTeam extends StatelessWidget {
   final TextEditingController leaderNameController = TextEditingController();
   final TextEditingController leaderEmailController = TextEditingController();
 
-  void _addTeam(){
-    String id = idController.text;
+  Team _addTeam(){
     String name = nameController.text;
     String leaderName = leaderNameController.text;
     String leaderEmail = leaderEmailController.text;
-    List<String> parameters = event.parameterList;
-    Map<String, int> marks = {};
-    for(int i = 0; i < parameters.length; i++){
-      String parameter = parameters[i];
-      marks[parameter] = 0;
-    }
-    marks["total"] = 0;
-    Team team = Team(int.parse(id), name, marks, event);
-    event.teams.add(team);
+    // List<String> parameters = event.parameterList;
+    // Map<String, int> marks = {};
+    // for(int i = 0; i < parameters.length; i++){
+    //   String parameter = parameters[i];
+    //   marks[parameter] = 0;
+    // }
+    // marks["total"] = 0;
+    Team team = Team(name, leaderEmail, event.id);
+    // event.teams.add(team);
+    return team;
   }
+  // Future<Team> addTeam(Team team, TeamScore teamScore) async {
+  //   TeamModel teamModel = TeamModel.fromEntity(team);
+  //   int id = await apiService.addTeam(teamModel, teamScore);
+  //   team.id = id;
+  //   refreshList();
+  //   return team;
+  //
+  // }
+
   @override
   Widget build(BuildContext context) {
     double sh = MediaQuery.of(context).size.height;
@@ -55,32 +68,7 @@ class AddTeam extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Container(
-                  width: sw * 0.6,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child: TextField(
-                    controller: idController,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                        prefixIcon: const Icon(
-                          Icons.pending_outlined,
-                          color: Colors.white,
-                        ),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        contentPadding: EdgeInsets.zero,
-                        label: const Text(
-                          "Team Id",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        )),
-                  ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
+
                 Container(
                   width: sw * 0.6,
                   decoration:
@@ -166,9 +154,16 @@ class AddTeam extends StatelessWidget {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      _addTeam();
-                      Provider.of<EventListModel>(context, listen: false).refreshList();
-                      Navigator.pop(context);
+                      Team team = _addTeam();
+                      // TeamScore teamScore = ;
+                      Provider.of<EventListModel>(context, listen: false).addTeam1(team);
+                      Provider.of<EventListModel>(context, listen: false).getEvents();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EventListScreen(),
+                        ),
+                      );
                     },
                     child: Text(
                       "Add",

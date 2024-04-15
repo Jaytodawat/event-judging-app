@@ -30,7 +30,7 @@ class EventCard extends StatelessWidget {
               border: Border.all(color: Colors.grey),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text((event.id).toString(),
                 style: kEventCardStyle

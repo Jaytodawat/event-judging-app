@@ -3,9 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:judge_assist_app/constants.dart';
 import 'package:flip_card/flip_card.dart';
-import 'package:judge_assist_app/features/presentation/screens/Admin/AdminHomeScreen.dart';
 import 'package:judge_assist_app/features/presentation/screens/Admin/admin_event_list_screen.dart';
 import 'package:judge_assist_app/features/presentation/screens/Judge/home_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/event_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -106,8 +108,8 @@ class _LoginScreenState extends State<LoginScreen> {
             FlipCard(
                 flipOnTouch: false,
                 controller: _flipCardController,
-                front: const admin(),
-                back: const judge())
+                front: Admin(),
+                back: Judge())
           ],
         ),
       ),
@@ -115,9 +117,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-class admin extends StatelessWidget {
-  const admin({super.key});
-
+class Admin extends StatelessWidget {
+  Admin({super.key});
+  final TextEditingController userName = TextEditingController();
+  final TextEditingController password = TextEditingController();
   @override
   Widget build(BuildContext context) {
     double sh = MediaQuery.of(context).size.height;
@@ -135,32 +138,33 @@ class admin extends StatelessWidget {
           child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Container(
-            width: sw * 0.6,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: TextField(
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                  prefixIcon: const Icon(
-                    CupertinoIcons.profile_circled,
-                    color: Colors.white,
-                  ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  contentPadding: EdgeInsets.zero,
-                  label: const Text(
-                    "Admin Name",
-                    style: TextStyle(color: Colors.white),
-                  )),
-            ),
-          ),
+          // Container(
+          //   width: sw * 0.6,
+          //   decoration: BoxDecoration(
+          //     borderRadius: BorderRadius.circular(20.0),
+          //   ),
+          //   child: TextField(
+          //     style: const TextStyle(color: Colors.white),
+          //     decoration: InputDecoration(
+          //         prefixIcon: const Icon(
+          //           CupertinoIcons.profile_circled,
+          //           color: Colors.white,
+          //         ),
+          //         border: OutlineInputBorder(
+          //             borderRadius: BorderRadius.circular(10.0)),
+          //         contentPadding: EdgeInsets.zero,
+          //         label: const Text(
+          //           "Admin Name",
+          //           style: TextStyle(color: Colors.white),
+          //         )),
+          //   ),
+          // ),
           Container(
             width: sw * 0.6,
             decoration:
                 BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
             child: TextField(
+              controller: userName,
               keyboardType: TextInputType.emailAddress,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
@@ -172,7 +176,7 @@ class admin extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10.0)),
                   contentPadding: EdgeInsets.zero,
                   label: const Text(
-                    "Admin Email",
+                    "Admin UserName",
                     style: TextStyle(color: Colors.white),
                   )),
             ),
@@ -182,6 +186,7 @@ class admin extends StatelessWidget {
             decoration:
                 BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
             child: TextField(
+              controller: password,
               keyboardType: TextInputType.visiblePassword,
               style: const TextStyle(color: Colors.white),
               obscureText: true,
@@ -205,12 +210,26 @@ class admin extends StatelessWidget {
                 color: Colors.pink, borderRadius: BorderRadius.circular(20.0)),
             child: TextButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EventListScreen(),
-                  ),
-                );
+
+                String user = userName.text;
+                String pass = password.text;
+                if(user == 'admin' && pass == 'admin123'){
+                  Provider.of<EventListModel>(context, listen: false).getEvents();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EventListScreen(),
+                    ),
+                  );
+                } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Incorrect Credential'),
+                        backgroundColor: Colors.red, // Customize as needed
+                      ),
+                    );
+                }
+
               },
               child: Text(
                 "Submit",
@@ -224,8 +243,12 @@ class admin extends StatelessWidget {
   }
 }
 
-class judge extends StatelessWidget {
-  const judge({super.key});
+class Judge extends StatelessWidget {
+  Judge({super.key});
+  final TextEditingController userName = TextEditingController();
+  final TextEditingController password = TextEditingController();
+
+  final TextEditingController idController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -251,18 +274,20 @@ class judge extends StatelessWidget {
             ),
             child: TextField(
               style: const TextStyle(color: Colors.white),
+              controller: idController,
               decoration: InputDecoration(
-                  prefixIcon: const Icon(
-                    CupertinoIcons.profile_circled,
-                    color: Colors.white,
-                  ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  contentPadding: EdgeInsets.zero,
-                  label: const Text(
-                    "Judge Name",
-                    style: TextStyle(color: Colors.white),
-                  )),
+                prefixIcon: const Icon(
+                  CupertinoIcons.profile_circled,
+                  color: Colors.white,
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
+                contentPadding: EdgeInsets.zero,
+                label: const Text(
+                  "Judge Id",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
           ),
           Container(
@@ -270,6 +295,7 @@ class judge extends StatelessWidget {
             decoration:
                 BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
             child: TextField(
+              controller: userName,
               keyboardType: TextInputType.emailAddress,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
@@ -291,6 +317,7 @@ class judge extends StatelessWidget {
             decoration:
                 BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
             child: TextField(
+              controller: password,
               keyboardType: TextInputType.visiblePassword,
               style: const TextStyle(color: Colors.white),
               obscureText: true,
@@ -313,13 +340,51 @@ class judge extends StatelessWidget {
             decoration: BoxDecoration(
                 color: Colors.pink, borderRadius: BorderRadius.circular(20.0)),
             child: TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HomeScreen(),
-                  ),
-                );
+              onPressed: () async {
+                // Provider.of<EventListModel>(context, listen: false)
+                //     .clearEvents();
+                // Provider.of<EventListModel>(context, listen: false)
+                //     .getEvents();
+                // int id = int.parse(idController.text);
+                // // idController.dispose();
+                // // userName.dispose();
+                // // password.dispose();
+                //
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => HomeScreen(judgeId : id),
+                //   ),
+                // );
+
+
+                bool check = await Provider.of<EventListModel>(context, listen: false).loginJudge(userName.text, password.text);
+                if(check){
+                  if(context.mounted){
+                    Provider.of<EventListModel>(context, listen: false)
+                        .clearEvents();
+                    Provider.of<EventListModel>(context, listen: false)
+                        .getEvents();
+                    int id = int.parse(idController.text);
+                    idController.dispose();
+                    userName.dispose();
+                    password.dispose();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomeScreen(judgeId: id,),
+                      ),
+                    );
+                  }
+
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Incorrect Credential'),
+                      backgroundColor: Colors.red, // Customize as needed
+                    ),
+                  );
+                }
               },
               child: Text(
                 "Submit",

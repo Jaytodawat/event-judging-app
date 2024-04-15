@@ -51,7 +51,7 @@ class ReusableTextField extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
           ),
           enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey),
+            borderSide: BorderSide(color: Colors.black),
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
           ),
           focusedBorder: const OutlineInputBorder(
@@ -60,11 +60,11 @@ class ReusableTextField extends StatelessWidget {
             ),
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
           ),
-          fillColor: kFaintWhite,
+          fillColor: Colors.white,
           filled: true,
           prefixIcon: icon,
           labelText: labelText,
-          labelStyle: const TextStyle(color: Colors.grey, fontSize: 13),
+          labelStyle: const TextStyle(color: Colors.black, fontSize: 13),
         ),
       ),
     );

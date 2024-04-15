@@ -9,11 +9,16 @@ class TeamCard extends StatelessWidget {
   final Event event;
   final Team team;
   final void Function() onTap;
-  const TeamCard({super.key,  required this.team, required this.event, required this.onTap});
+  const TeamCard(
+      {super.key,
+      required this.team,
+      required this.event,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 7.0),
         child: Material(
@@ -53,11 +58,11 @@ class TeamCard extends StatelessWidget {
                       //     Text('${team.marks["total"]}'),
                       //   ],
                       // ),
-                      Text(
-                        'Score : ${team.marks["total"]}',
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 9),
-                      ),
+                      // Text(
+                      //   'Score : ${team.marks["total"]}',
+                      //   style:
+                      //       const TextStyle(color: Colors.black, fontSize: 9),
+                      // ),
                     ],
                   ),
                 ),
@@ -66,7 +71,6 @@ class TeamCard extends StatelessWidget {
           ),
         ),
       ),
-      onTap: onTap,
     );
   }
 }

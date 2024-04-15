@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:judge_assist_app/features/data/models/TeamScore.dart';
 import 'package:judge_assist_app/features/presentation/widgets/custom_buttons.dart';
 import 'package:provider/provider.dart';
 import 'package:judge_assist_app/features/domain/entities/Event.dart';
@@ -9,22 +10,28 @@ import 'package:judge_assist_app/features/presentation/widgets/reusable_textfiel
 class UpdateTeamScreen extends StatelessWidget {
   final Event event;
   final Team team;
-  UpdateTeamScreen({super.key, required this.event, required this.team});
+  final int judgeId;
+  UpdateTeamScreen({super.key, required this.event, required this.team, required this.judgeId});
 
   // final TextEditingController nameController = TextEditingController();
   // final TextEditingController idController = TextEditingController();
   late final List<String> parameters;
 
-  void _addTeam(Team team, List<CustomTextField> inputList) {
+  TeamScore _addTeam(Team team, List<CustomTextField> inputList) {
     int total = 0;
+    Map<String, int> parameterMap = event.parameterId;
+    Map<int?, int> scoreMap = {};
     for (int i = 0; i < inputList.length; i++) {
       CustomTextField customTextField = inputList[i];
       String parameter = parameters[i];
       int score = int.parse(customTextField.controller.text);
-      team.marks[parameter] = score;
-      total += score;
+      scoreMap[parameterMap[parameter]] = score;
+      // team.marks[parameter] = score;
+      // total += score;
     }
-    team.marks["total"] = total;
+    // team.marks["total"] = total;
+    TeamScore teamScore = TeamScore(event.id, team.id, judgeId, scoreMap);
+    return teamScore;
   }
 
   @override
@@ -33,7 +40,7 @@ class UpdateTeamScreen extends StatelessWidget {
     List<CustomTextField> inputList = [];
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white,
         body: Center(
           child: Container(
             margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -46,7 +53,7 @@ class UpdateTeamScreen extends StatelessWidget {
                   },
                   icon: const Icon(
                     Icons.arrow_back_rounded,
-                    color: Colors.black,
+                    color: Colors.white,
                     size: 30,
                   ),
                   padding: const EdgeInsets.all(0),
@@ -57,7 +64,7 @@ class UpdateTeamScreen extends StatelessWidget {
                 const Text(
                   'Edit or Fill Marks',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontSize: 24,
                     fontWeight: FontWeight.w500,
                   ),
@@ -65,16 +72,16 @@ class UpdateTeamScreen extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                Text('Team Id : ${team.id}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                Text('Team Id : ${team.id}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),),
                 const SizedBox(
                   height: 20,
                 ),
-                Text('Team Name : ${team.name}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                Text('Team Name : ${team.name}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),),
                 const SizedBox(
                   height: 20,
                 ),
 
-                Text('Parameters : ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                Text('Parameters : ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),),
                 const SizedBox(
                   height: 20,
                 ),
@@ -98,8 +105,8 @@ class UpdateTeamScreen extends StatelessWidget {
         bottomNavigationBar: RoundedButton(
           text: "Submit",
           onPressed: () {
-            _addTeam(team, inputList);
-            Provider.of<EventListModel>(context, listen: false).refreshList();
+            TeamScore teamScore = _addTeam(team, inputList);
+            Provider.of<EventListModel>(context, listen: false).addScore(teamScore);
             Navigator.pop(context);
           },
         ),
