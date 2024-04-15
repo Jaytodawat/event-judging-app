@@ -10,7 +10,7 @@ import '../../widgets/custom_buttons.dart';
 import '../../widgets/event_card.dart';
 
 class EventListScreen extends StatefulWidget {
-  const EventListScreen({Key? key}) : super(key: key);
+  const EventListScreen({super.key});
 
   @override
   State<EventListScreen> createState() => _EventListScreenState();

@@ -296,7 +296,7 @@ class Judge extends StatelessWidget {
                 BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
             child: TextField(
               controller: userName,
-              keyboardType: TextInputType.emailAddress,
+              keyboardType: TextInputType.text,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                   prefixIcon: const Icon(
@@ -318,7 +318,7 @@ class Judge extends StatelessWidget {
                 BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
             child: TextField(
               controller: password,
-              keyboardType: TextInputType.visiblePassword,
+              keyboardType: TextInputType.text,
               style: const TextStyle(color: Colors.white),
               obscureText: true,
               decoration: InputDecoration(
@@ -358,8 +358,8 @@ class Judge extends StatelessWidget {
                 // );
 
 
-                bool check = await Provider.of<EventListModel>(context, listen: false).loginJudge(userName.text, password.text);
-                if(check){
+                String check = await Provider.of<EventListModel>(context, listen: false).loginJudge(userName.text, password.text);
+                if(check == 'Login successful'){
                   if(context.mounted){
                     Provider.of<EventListModel>(context, listen: false)
                         .clearEvents();
@@ -378,12 +378,14 @@ class Judge extends StatelessWidget {
                   }
 
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Incorrect Credential'),
-                      backgroundColor: Colors.red, // Customize as needed
-                    ),
-                  );
+                  if(context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(check),
+                        backgroundColor: Colors.red, // Customize as needed
+                      ),
+                    );
+                  }
                 }
               },
               child: Text(

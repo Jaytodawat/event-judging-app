@@ -172,25 +172,46 @@ class ApiService {
     }
   }
 
-  Future<bool> loginJudge(Judge judge) async{
+  Future<String> loginJudge(Judge judge) async {
     Map<String, dynamic> judgeData = judge.toLoginJson();
-    print(judgeData);
     try {
       final response = await dio.post(
-          'https://judging-be.onrender.com/dev/api/judge/login',
-          data: judgeData);
+        'https://judging-be.onrender.com/dev/api/judge/login',
+        data: judgeData,
+      );
       print(response.statusCode);
       if (response.statusCode! >= 400) {
-        return false;
-      } else if(response.statusCode == 200){
-        return true;
+        return 'Invalid credentials';
+      } else if (response.statusCode == 200) {
+        return 'Login successful';
       } else {
-        throw Exception('Failed to add team');
+        throw Exception('Failed to login');
       }
-    }catch (e) {
-      throw Exception('Failed to add team: $e');
+    } catch (e) {
+      return 'Failed to login'; // Return generic error message
     }
   }
+
+
+  // Future<bool> loginJudge(Judge judge) async{
+  //   Map<String, dynamic> judgeData = judge.toLoginJson();
+  //   print(judgeData);
+  //   try {
+  //     final response = await dio.post(
+  //         'https://judging-be.onrender.com/dev/api/judge/login',
+  //         data: judgeData);
+  //     print(response.statusCode);
+  //     if (response.statusCode! >= 400) {
+  //       return false;
+  //     } else if(response.statusCode == 200){
+  //       return true;
+  //     } else {
+  //       throw Exception('Failed to add team');
+  //     }
+  //   }catch (e) {
+  //     throw Exception('Failed to add team: $e');
+  //   }
+  // }
 
   Future<TeamDetails> getTeamScores(int teamId) async{
 
