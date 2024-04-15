@@ -40,23 +40,23 @@ class ApiService {
     }
   }
 
-  // Future<int> getEventById(int id) async {
-  //   // print("ApiService1");
-  //   try {
-  //     final response = await dio.get('https://judging-be.onrender.com/dev/api/admin/events/$id');
-  //     print(response.statusCode);
-  //     if (response.statusCode == 200) {
-  //       final responseData = response.data[0];
-  //       // print(responseData[0]);
-  //       EventModel eventMode = EventModel.fromJson1(responseData);
-  //       return int.parse(responseData["pk_eventid"]);
-  //     } else {
-  //       throw Exception('Failed to load events');
-  //     }
-  //   } catch (e) {
-  //     throw Exception('Failed to load events: $e');
-  //   }
-  // }
+  Future<int> getEventById(int id) async {
+    // print("ApiService1");
+    try {
+      final response = await dio.get('https://judging-be.onrender.com/dev/api/admin/events/$id');
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        final responseData = response.data[0];
+        // print(responseData[0]);
+        // EventModel eventMode = EventModel.fromJson(responseData);
+        return int.parse(responseData["pk_eventid"]);
+      } else {
+        throw Exception('Failed to load events');
+      }
+    } catch (e) {
+      throw Exception('Failed to load events: $e');
+    }
+  }
 
   // Future<EventModel> getJudgeEvents(int judgeId) async {
   //   // print("ApiService1");
