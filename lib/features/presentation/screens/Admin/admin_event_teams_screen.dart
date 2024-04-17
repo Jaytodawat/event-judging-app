@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:judge_assist_app/features/presentation/screens/Admin/AddJudge.dart';
 import 'package:judge_assist_app/features/presentation/screens/Admin/AddTeam.dart';
 import 'package:judge_assist_app/features/presentation/screens/Admin/team_detail_screen.dart';
+import 'package:judge_assist_app/features/presentation/screens/Admin/winner_list_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../domain/entities/Event.dart';
@@ -26,6 +27,19 @@ class EventTeamScreen extends StatelessWidget {
             style: const TextStyle(color: Colors.white),
           ),
           centerTitle: true,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.emoji_events), // Icon for the button
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => WinnerListScreen(eventId: event.id), // Navigate to WinnerPage
+                  ),
+                );
+              },
+            ),
+          ],
         ),
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),

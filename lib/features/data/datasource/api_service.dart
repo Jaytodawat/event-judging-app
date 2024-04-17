@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:judge_assist_app/features/data/models/Judge.dart';
 import 'package:judge_assist_app/features/data/models/TeamModel.dart';
 import 'package:judge_assist_app/features/data/models/TeamScore.dart';
+import 'package:judge_assist_app/features/data/models/Winner.dart';
 
 import '../models/EventModel.dart';
 import '../models/TeamDetails.dart';
@@ -19,6 +20,7 @@ class ApiService {
       print(response.statusCode);
       if (response.statusCode == 200) {
         final List<dynamic> responseData = response.data['response'];
+        
         return responseData
             .map((eventJson) => EventModel.fromJson(eventJson))
             .toList();
@@ -26,7 +28,31 @@ class ApiService {
         throw Exception('Failed to load events');
       }
     } catch (e) {
+      print(e.toString());
       throw Exception('Failed to load events: $e');
+    }
+  }
+
+  Future<List<Winner>> getWinnerList(int eventId) async {
+    print("ApiService1");
+    try {
+      final response =
+      await dio.get('https://judging-be.onrender.com/dev/api/admin//winner/$eventId');
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = response.data;
+        print(responseData);
+        return responseData.map((json) => Winner.fromJson(json)).toList();
+        // final List<dynamic> responseData = response.data;
+        // print(responseData);
+        // return responseData
+        //     .map((eventJson) => Winner.fromJson(eventJson))
+        //     .toList();
+      } else {
+        throw Exception('Failed to load winner list');
+      }
+    } catch (e) {
+      throw Exception('Failed to load winner list: $e');
     }
   }
 

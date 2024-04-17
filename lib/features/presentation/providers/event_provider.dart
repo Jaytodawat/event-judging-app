@@ -3,6 +3,7 @@ import 'package:judge_assist_app/features/data/datasource/api_service.dart';
 import 'package:judge_assist_app/features/data/models/TeamDetails.dart';
 import 'package:judge_assist_app/features/data/models/TeamModel.dart';
 import 'package:judge_assist_app/features/data/models/TeamScore.dart';
+import 'package:judge_assist_app/features/data/models/Winner.dart';
 import 'package:judge_assist_app/features/domain/entities/Event.dart';
 import 'package:judge_assist_app/features/domain/entities/Team.dart';
 
@@ -81,6 +82,11 @@ class EventListModel extends ChangeNotifier{
     refreshList();
     return team;
 
+  }
+
+  Future<List<Winner>> getWinnerList(int eventId) async{
+    List<Winner> winnerList = await apiService.getWinnerList(eventId);
+    return winnerList;
   }
 
   Future<Judge> addJudge(Judge judge) async{
