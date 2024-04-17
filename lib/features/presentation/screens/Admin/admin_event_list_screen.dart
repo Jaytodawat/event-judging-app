@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:judge_assist_app/features/presentation/providers/auth_provider.dart';
 import 'package:judge_assist_app/features/presentation/screens/Admin/CreateEventScreen.dart';
 import 'package:judge_assist_app/features/presentation/screens/Admin/admin_event_teams_screen.dart';
+import 'package:judge_assist_app/features/presentation/screens/LoginScreen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../domain/entities/Event.dart';
@@ -116,9 +118,11 @@ class AdminEventListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var eventListModel = Provider.of<EventListModel>(context, listen: true);
+    Auth auth = Auth();
     Future<void> refreshEvents() async {
       await eventListModel.refresh(); // Call the method to fetch events again
     }
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -127,11 +131,27 @@ class AdminEventListScreen extends StatelessWidget {
             style: TextStyle(color: Colors.white),
           ),
           centerTitle: true,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.logout_outlined),
+              onPressed: () async {
+                await auth.clearLoginInfo();
+                if (context.mounted) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
         ),
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: RefreshIndicator(
-            onRefresh:() => refreshEvents(),
+            onRefresh: () => refreshEvents(),
             child: FutureBuilder<List<Event>>(
               future: eventListModel.getAllEvents(),
               builder: (context, snapshot) {
