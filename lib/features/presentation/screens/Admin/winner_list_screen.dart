@@ -14,56 +14,67 @@ class WinnerListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var eventListModel = Provider.of<EventListModel>(context, listen: false);
+    Future<void> refreshWinners() async {
+      // Call the function to fetch winners again
+      await eventListModel.refresh();
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Winners'),
+        title: const Text('Winners',style: TextStyle(color: Colors.white),),
+        centerTitle: true,
       ),
-      body: FutureBuilder<List<Winner>>(
-        future: eventListModel.getWinnerList(eventId),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            String errorMessage = '';
-            if (snapshot.error is Exception) {
-              final error = snapshot.error as Exception;
-              if (error is DioException) {
-                if (error.response?.statusCode == 400) {
-                  errorMessage = 'Wrong input';
-                } else if (error.response?.statusCode == 502) {
-                  errorMessage = 'Server down';
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        child: RefreshIndicator(
+          onRefresh: () => refreshWinners(),
+          child: FutureBuilder<List<Winner>>(
+            future: eventListModel.getWinnerList(eventId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError) {
+                String errorMessage = '';
+                if (snapshot.error is Exception) {
+                  final error = snapshot.error as Exception;
+                  if (error is DioException) {
+                    if (error.response?.statusCode == 400) {
+                      errorMessage = 'Wrong input';
+                    } else if (error.response?.statusCode == 502) {
+                      errorMessage = 'Server down';
+                    } else {
+                      print(error.response?.statusCode);
+                      errorMessage = 'Unknown error';
+                    }
+                  } else {
+                    // print(error.response?.statusCode);
+                    errorMessage = 'Unknown error';
+                  }
                 } else {
-                  print(error.response?.statusCode);
-                  errorMessage = 'Unknown error';
+                  // print(snapshot.error.response?.statusCode);
+                  errorMessage = 'No Team Judged Yet in this event';
                 }
+                return Center(
+                  child: Text(
+                    'Failed To Load Data : $errorMessage',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                );
               } else {
-                // print(error.response?.statusCode);
-                errorMessage = 'Unknown error';
+                final winners = snapshot.data!;
+                return ListView.builder(
+                  itemCount: winners.length,
+                  itemBuilder: (context, index) {
+                    final winner = winners[index];
+                    return WinnerCard(winnerTeam: winner);
+                  },
+                );
               }
-            } else {
-              // print(snapshot.error.response?.statusCode);
-              errorMessage = 'No Team Judged Yet in this event';
-            }
-            return Center(
-              child: Text(
-                'Failed To Load Data : $errorMessage',
-                style: TextStyle(color: Colors.white),
-              ),
-            );
-          } else {
-            final winners = snapshot.data!;
-            return ListView.builder(
-              itemCount: winners.length,
-              itemBuilder: (context, index) {
-                final winner = winners[index];
-                return WinnerCard(winnerTeam: winner);
-              },
-            );
-          }
-        },
+            },
+          ),
+        ),
       ),
     );
   }

@@ -108,46 +108,57 @@ class _AddJudgeState extends State<AddJudge> {
                       onPressed: () async {
                         Judge judge = Judge(nameController.text,
                             emailController.text, widget.event.id);
-                        Judge addedJuge = await Provider.of<EventListModel>(
+                        Judge addedJudge = await Provider.of<EventListModel>(
                           context,
                           listen: false,
                         ).addJudge(judge);
 
                         // Show the alert dialog with the generated password
-                        bool flag = false;
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              backgroundColor: const Color(0xFF1D1D2F),
-                              title: const Text('Password'),
-                              content: Row(
-                                children: [
-                                  Text(
-                                    'ID : ${addedJuge.id}',
-                                    style: const TextStyle(color: Colors.white),
+                        if (context.mounted) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: const Color(0xFF1D1D2F),
+                                title: const Text('Password',style:
+                                TextStyle(color: Colors.white),),
+                                content: SizedBox(
+                                  height: 100,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'ID : ${addedJudge.id}',
+                                        style:
+                                            const TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        'Email : ${addedJudge.email}',
+                                        style:
+                                        const TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        'password : ${addedJudge.password.trim()}',
+                                        style:
+                                            const TextStyle(color: Colors.white),
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    'password : ${addedJuge.password}',
-                                    style: const TextStyle(color: Colors.white),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(
+                                          context); // Close alert dialog
+                                      Navigator.pop(context); // Pop screen
+                                    },
+                                    child: const Text('OK'),
                                   ),
                                 ],
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      flag = true;
-                                    });
-
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                              );
+                            },
+                          );
+                        }
 
                         // Close the screen after adding the judge
                         // if(flag){

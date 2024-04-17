@@ -41,12 +41,23 @@ class EventListModel extends ChangeNotifier{
   void refreshList(){
     notifyListeners();
   }
-
-  Future<List<Event>> getEvents() async{
-    final eventModels = await apiService.getEvents();
-    _events = eventModels.map((model)=>model.toEntity()).toList();
+  Future<void> refresh()async{
     refreshList();
-    return _events;
+  }
+
+  // Future<List<Event>> getEvents() async{
+  //   final eventModels = await apiService.getEvents();
+  //   _events = eventModels.map((model)=>model.toEntity()).toList();
+  //   refreshList();
+  //   return _events;
+  // }
+
+
+  Future<List<Event>> getAllEvents() async{
+    final eventModels = await apiService.getEvents();
+    List<Event> eventList = eventModels.map((model)=>model.toEntity()).toList();
+
+    return eventList;
   }
 
   void addEvent(Event event) async{
@@ -66,7 +77,7 @@ class EventListModel extends ChangeNotifier{
     return teamList;
   }
 
-  Future<Team> addTeam1(Team team) async {
+  Future<Team> addTeam(Team team) async {
     TeamModel teamModel = TeamModel.fromEntity(team);
     int id = await apiService.addTeam1(teamModel);
     team.id = id;
@@ -75,14 +86,7 @@ class EventListModel extends ChangeNotifier{
 
   }
 
-  Future<Team> addTeam(Team team, TeamScore teamScore) async {
-    TeamModel teamModel = TeamModel.fromEntity(team);
-    int id = await apiService.addTeam(teamModel, teamScore);
-    team.id = id;
-    refreshList();
-    return team;
 
-  }
 
   Future<List<Winner>> getWinnerList(int eventId) async{
     List<Winner> winnerList = await apiService.getWinnerList(eventId);
@@ -115,13 +119,7 @@ class EventListModel extends ChangeNotifier{
   //   refreshList();
   // }
 
-  void updateTeam(Event event, Team team){
 
-  }
-
-  void createEvent(Event event){
-
-  }
 
   void addScore(TeamScore teamScore){
     apiService.addTeamScore(teamScore);

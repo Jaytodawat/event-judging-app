@@ -155,15 +155,8 @@ class AddTeam extends StatelessWidget {
                   child: TextButton(
                     onPressed: () {
                       Team team = _addTeam();
-                      // TeamScore teamScore = ;
-                      Provider.of<EventListModel>(context, listen: false).addTeam1(team);
-                      Provider.of<EventListModel>(context, listen: false).getEvents();
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EventListScreen(),
-                        ),
-                      );
+                      Provider.of<EventListModel>(context, listen: false).addTeam(team);
+                      Navigator.pop(context);
                     },
                     child: Text(
                       "Add",
