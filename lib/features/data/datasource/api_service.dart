@@ -28,20 +28,20 @@ class ApiService {
         throw Exception('Failed to load events');
       }
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
       throw Exception('Failed to load events: $e');
     }
   }
 
   Future<List<Winner>> getWinnerList(int eventId) async {
-    print("ApiService1");
+    // print("ApiService1");
     try {
       final response =
       await dio.get('https://judging-be.onrender.com/dev/api/admin//winner/$eventId');
-      print(response.statusCode);
+      // print(response.statusCode);
       if (response.statusCode == 200) {
         final List<dynamic> responseData = response.data;
-        print(responseData);
+        // print(responseData);
         return responseData.map((json) => Winner.fromJson(json)).toList();
         // final List<dynamic> responseData = response.data;
         // print(responseData);
@@ -219,25 +219,6 @@ class ApiService {
   }
 
 
-  // Future<bool> loginJudge(Judge judge) async{
-  //   Map<String, dynamic> judgeData = judge.toLoginJson();
-  //   print(judgeData);
-  //   try {
-  //     final response = await dio.post(
-  //         'https://judging-be.onrender.com/dev/api/judge/login',
-  //         data: judgeData);
-  //     print(response.statusCode);
-  //     if (response.statusCode! >= 400) {
-  //       return false;
-  //     } else if(response.statusCode == 200){
-  //       return true;
-  //     } else {
-  //       throw Exception('Failed to add team');
-  //     }
-  //   }catch (e) {
-  //     throw Exception('Failed to add team: $e');
-  //   }
-  // }
 
   Future<TeamDetails> getTeamScores(int teamId) async{
 

@@ -25,7 +25,7 @@ class AdminHomeScreen extends StatelessWidget {
           children: [
             TextButton(onPressed: (){}, child: Text("Register Event",style: kButtonStyle,)),
             TextButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => EventListScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => AdminEventListScreen()));
             }, child: Text("View All Events",style: kButtonStyle,),)
           ],
         ),

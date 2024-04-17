@@ -8,12 +8,20 @@ import 'package:provider/provider.dart';
 import 'package:judge_assist_app/constants.dart';
 import '../../providers/event_provider.dart';
 
-class CreateEventScreen extends StatelessWidget {
-  CreateEventScreen({super.key});
+class CreateEventScreen extends StatefulWidget {
+  const CreateEventScreen({super.key});
 
+  @override
+  State<CreateEventScreen> createState() => _CreateEventScreenState();
+}
+
+class _CreateEventScreenState extends State<CreateEventScreen> {
   final TextEditingController nameController = TextEditingController();
+
   final TextEditingController parametersController = TextEditingController();
+
   TextEditingController startingDate = TextEditingController();
+
   TextEditingController endingDate = TextEditingController();
 
   DateTime selectedDate = DateTime.now();
@@ -200,12 +208,13 @@ class CreateEventScreen extends StatelessWidget {
                     onPressed: () {
                       Event event = _addEvent();
                       Provider.of<EventListModel>(context, listen: false).addEvent(event); // Add event to the database
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EventListScreen(),
-                        ),
-                      ); // Go back to the previous screen
+                      Navigator.pop(context);
+                      // Navigator.pushReplacement(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => EventListScreen(),
+                      //   ),
+                      // ); // Go back to the previous screen
                     },
                     child: Text(
                       "Add",

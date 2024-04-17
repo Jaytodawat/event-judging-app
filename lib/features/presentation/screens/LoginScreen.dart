@@ -214,11 +214,10 @@ class Admin extends StatelessWidget {
                 String user = userName.text;
                 String pass = password.text;
                 if(user == 'admin' && pass == 'admin123'){
-                  Provider.of<EventListModel>(context, listen: false).getEvents();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const EventListScreen(),
+                      builder: (context) => const AdminEventListScreen(),
                     ),
                   );
                 } else {
@@ -361,10 +360,10 @@ class Judge extends StatelessWidget {
                 String check = await Provider.of<EventListModel>(context, listen: false).loginJudge(userName.text, password.text);
                 if(check == 'Login successful'){
                   if(context.mounted){
-                    Provider.of<EventListModel>(context, listen: false)
-                        .clearEvents();
-                    Provider.of<EventListModel>(context, listen: false)
-                        .getEvents();
+                    // Provider.of<EventListModel>(context, listen: false)
+                    //     .clearEvents();
+                    // Provider.of<EventListModel>(context, listen: false)
+                    //     .getAllEvents();
                     int id = int.parse(idController.text);
                     idController.dispose();
                     userName.dispose();
@@ -372,7 +371,7 @@ class Judge extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => HomeScreen(judgeId: id,),
+                        builder: (context) => JudgeEventScreen(judgeId: id,),
                       ),
                     );
                   }
