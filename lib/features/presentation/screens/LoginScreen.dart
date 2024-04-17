@@ -6,6 +6,7 @@ import 'package:flip_card/flip_card.dart';
 import 'package:judge_assist_app/features/presentation/screens/Admin/admin_event_list_screen.dart';
 import 'package:judge_assist_app/features/presentation/screens/Judge/home_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../providers/event_provider.dart';
 
@@ -108,8 +109,8 @@ class _LoginScreenState extends State<LoginScreen> {
             FlipCard(
                 flipOnTouch: false,
                 controller: _flipCardController,
-                front: Admin(),
-                back: Judge())
+                front: const Admin(),
+                back: const Judge())
           ],
         ),
       ),
@@ -117,10 +118,55 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-class Admin extends StatelessWidget {
-  Admin({super.key});
+class Admin extends StatefulWidget {
+  const Admin({super.key});
+
+  @override
+  State<Admin> createState() => _AdminState();
+}
+
+class _AdminState extends State<Admin> {
   final TextEditingController userName = TextEditingController();
+
   final TextEditingController password = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoggedIn().then((loggedIn) {
+      if (loggedIn) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AdminEventListScreen(),
+          ),
+        );
+      }
+    });
+  }
+
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    userName.dispose();
+    password.dispose();
+  }
+
+  Future<void> _saveLoginInfo(bool isAdmin) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isAdmin', isAdmin);
+    // You can also save other user information if needed
+  }
+
+  Future<bool> _checkLoggedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.containsKey('isAdmin');
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     double sh = MediaQuery.of(context).size.height;
@@ -138,27 +184,6 @@ class Admin extends StatelessWidget {
           child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          // Container(
-          //   width: sw * 0.6,
-          //   decoration: BoxDecoration(
-          //     borderRadius: BorderRadius.circular(20.0),
-          //   ),
-          //   child: TextField(
-          //     style: const TextStyle(color: Colors.white),
-          //     decoration: InputDecoration(
-          //         prefixIcon: const Icon(
-          //           CupertinoIcons.profile_circled,
-          //           color: Colors.white,
-          //         ),
-          //         border: OutlineInputBorder(
-          //             borderRadius: BorderRadius.circular(10.0)),
-          //         contentPadding: EdgeInsets.zero,
-          //         label: const Text(
-          //           "Admin Name",
-          //           style: TextStyle(color: Colors.white),
-          //         )),
-          //   ),
-          // ),
           Container(
             width: sw * 0.6,
             decoration:
@@ -176,7 +201,7 @@ class Admin extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10.0)),
                   contentPadding: EdgeInsets.zero,
                   label: const Text(
-                    "Admin UserName",
+                    "UserName",
                     style: TextStyle(color: Colors.white),
                   )),
             ),
@@ -199,7 +224,7 @@ class Admin extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10.0)),
                   contentPadding: EdgeInsets.zero,
                   label: const Text(
-                    "Admin Password",
+                    "Password",
                     style: TextStyle(color: Colors.white),
                   )),
             ),
@@ -209,26 +234,27 @@ class Admin extends StatelessWidget {
             decoration: BoxDecoration(
                 color: Colors.pink, borderRadius: BorderRadius.circular(20.0)),
             child: TextButton(
-              onPressed: () {
-
+              onPressed: () async{
                 String user = userName.text;
                 String pass = password.text;
-                if(user == 'admin' && pass == 'admin123'){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AdminEventListScreen(),
-                    ),
-                  );
-                } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Incorrect Credential'),
-                        backgroundColor: Colors.red, // Customize as needed
+                if (user == 'admin' && pass == 'admin123') {
+                  await _saveLoginInfo(true);
+                  if(context.mounted) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AdminEventListScreen(),
                       ),
                     );
+                  }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Incorrect Credential'),
+                      backgroundColor: Colors.red, // Customize as needed
+                    ),
+                  );
                 }
-
               },
               child: Text(
                 "Submit",
@@ -242,12 +268,57 @@ class Admin extends StatelessWidget {
   }
 }
 
-class Judge extends StatelessWidget {
-  Judge({super.key});
+class Judge extends StatefulWidget {
+  const Judge({super.key});
+
+  @override
+  State<Judge> createState() => _JudgeState();
+}
+
+class _JudgeState extends State<Judge> {
   final TextEditingController userName = TextEditingController();
+
   final TextEditingController password = TextEditingController();
 
   final TextEditingController idController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkJudgeLoggedIn();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    userName.dispose();
+    password.dispose();
+    idController.dispose();
+  }
+
+  Future<void> _saveJudgeLoginInfo(int judgeId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isJudgeLoggedIn', true);
+    prefs.setInt('judgeId', judgeId); // Save judge ID
+  }
+
+  Future<void> _checkJudgeLoggedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool loggedIn = prefs.containsKey('isJudgeLoggedIn');
+    if (loggedIn) {
+      int judgeId = prefs.getInt('judgeId') ?? 0; // Get judge ID
+      if (judgeId != 0) {
+        if (context.mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => JudgeEventScreen(judgeId: judgeId),
+            ),
+          );
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -340,44 +411,24 @@ class Judge extends StatelessWidget {
                 color: Colors.pink, borderRadius: BorderRadius.circular(20.0)),
             child: TextButton(
               onPressed: () async {
-                // Provider.of<EventListModel>(context, listen: false)
-                //     .clearEvents();
-                // Provider.of<EventListModel>(context, listen: false)
-                //     .getEvents();
-                // int id = int.parse(idController.text);
-                // // idController.dispose();
-                // // userName.dispose();
-                // // password.dispose();
-                //
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => HomeScreen(judgeId : id),
-                //   ),
-                // );
-
-
-                String check = await Provider.of<EventListModel>(context, listen: false).loginJudge(userName.text, password.text);
-                if(check == 'Login successful'){
-                  if(context.mounted){
-                    // Provider.of<EventListModel>(context, listen: false)
-                    //     .clearEvents();
-                    // Provider.of<EventListModel>(context, listen: false)
-                    //     .getAllEvents();
-                    int id = int.parse(idController.text);
-                    idController.dispose();
-                    userName.dispose();
-                    password.dispose();
-                    Navigator.push(
+                String check =
+                    await Provider.of<EventListModel>(context, listen: false)
+                        .loginJudge(userName.text, password.text);
+                if (check == 'Login successful') {
+                  int id = int.parse(idController.text);
+                  await _saveJudgeLoginInfo(id);
+                  if (context.mounted) {
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => JudgeEventScreen(judgeId: id,),
+                        builder: (context) => JudgeEventScreen(
+                          judgeId: id,
+                        ),
                       ),
                     );
                   }
-
                 } else {
-                  if(context.mounted) {
+                  if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(check),

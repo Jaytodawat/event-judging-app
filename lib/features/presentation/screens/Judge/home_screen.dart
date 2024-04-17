@@ -1,12 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:judge_assist_app/features/presentation/providers/auth_provider.dart';
 import 'package:judge_assist_app/features/presentation/screens/Judge/event_screen.dart';
 import 'package:judge_assist_app/features/presentation/widgets/event_card.dart';
 import 'package:judge_assist_app/features/presentation/providers/event_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../domain/entities/Event.dart';
 import '../../../domain/entities/Team.dart';
+import '../LoginScreen.dart';
+
 class JudgeEventScreen extends StatelessWidget {
   final int judgeId;
   const JudgeEventScreen({super.key, required this.judgeId});
@@ -14,9 +18,12 @@ class JudgeEventScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var eventListModel = Provider.of<EventListModel>(context, listen: true);
+    Auth auth = Auth();
     Future<void> refreshEvents() async {
       await eventListModel.refresh(); // Call the method to fetch events again
     }
+
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -24,11 +31,27 @@ class JudgeEventScreen extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout_outlined),
+            onPressed: () async {
+              await auth.clearLoginInfo();
+              if (context.mounted) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginScreen(),
+                  ),
+                );
+              }
+            },
+          ),
+        ],
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: RefreshIndicator(
-          onRefresh:() => refreshEvents(),
+          onRefresh: () => refreshEvents(),
           child: FutureBuilder<List<Event>>(
             future: eventListModel.getAllEvents(),
             builder: (context, snapshot) {
@@ -77,7 +100,8 @@ class JudgeEventScreen extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => EventScreen(
                               event: event,
-                              teams: event.teams, judgeId: judgeId,
+                              teams: event.teams,
+                              judgeId: judgeId,
                             ),
                           ),
                         );
@@ -93,8 +117,6 @@ class JudgeEventScreen extends StatelessWidget {
     );
   }
 }
-
-
 
 // class JudgeEventScreen extends StatelessWidget {
 //   final int judgeId;
