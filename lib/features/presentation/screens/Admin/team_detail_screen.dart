@@ -8,14 +8,14 @@ import '../../providers/event_provider.dart';
 class TeamDetailsScreen extends StatelessWidget {
   final int teamId;
   final Map<String, int> parameters;
-  TeamDetailsScreen({required this.teamId, required this.parameters});
+  const TeamDetailsScreen({super.key, required this.teamId, required this.parameters});
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Team Details', style: TextStyle(color:  Colors.white),),
+        title: const Text('Team Details', style: TextStyle(color:  Colors.white),),
       ),
       body: Consumer<EventListModel>(
         builder: (context, eventListModel, child) {
@@ -23,16 +23,16 @@ class TeamDetailsScreen extends StatelessWidget {
             future: eventListModel.getTeamScore(teamId),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
               } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('Error: ${snapshot.error}'),
+                return const Center(
+                  child: Text('Team Not Judged yet', style : TextStyle(fontSize: 16, color:  Colors.white),),
                 );
               } else if (!snapshot.hasData) {
-                return Center(
-                  child: Text('No data available'),
+                return const Center(
+                  child: Text('No data available', style : TextStyle(fontSize: 16, color:  Colors.white),),
                 );
               } else {
                 return _buildTeamDetails(snapshot.data!);
@@ -59,30 +59,30 @@ class TeamDetailsScreen extends StatelessWidget {
         children: [
           Text(
             'Team ID: ${teamDetails.teamId}',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color:  Colors.white),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color:  Colors.white),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             'Team Name: ${teamDetails.teamName}',
-            style: TextStyle(fontSize: 16, color:  Colors.white),
+            style: const TextStyle(fontSize: 16, color:  Colors.white),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             'Team Email: ${teamDetails.teamEmail}',
-            style: TextStyle(fontSize: 16, color:  Colors.white),
+            style: const TextStyle(fontSize: 16, color:  Colors.white),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             'Event Name: ${teamDetails.eventName}',
-            style: TextStyle(fontSize: 16, color:  Colors.white),
+            style: const TextStyle(fontSize: 16, color:  Colors.white),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             'Judge Name: ${teamDetails.judgeName}',
-            style: TextStyle(fontSize: 16, color:  Colors.white),
+            style: const TextStyle(fontSize: 16, color:  Colors.white),
           ),
-          SizedBox(height: 16),
-          Text(
+          const SizedBox(height: 16),
+          const Text(
             'Scores:',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color:  Colors.white),
           ),
@@ -91,7 +91,7 @@ class TeamDetailsScreen extends StatelessWidget {
             children: scores.entries.map((entry) {
               return Text(
                 '${entry.key} : ${entry.value}',
-                style: TextStyle(fontSize: 16, color:  Colors.white),
+                style: const TextStyle(fontSize: 16, color:  Colors.white),
               );
             }).toList(),
           ),
