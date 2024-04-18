@@ -61,12 +61,14 @@ class UpdateTeamScreen extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                const Text(
-                  'Edit or Fill Marks',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w500,
+                const Center(
+                  child: Text(
+                    'Add Score',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
                 const SizedBox(
@@ -81,7 +83,7 @@ class UpdateTeamScreen extends StatelessWidget {
                   height: 20,
                 ),
 
-                Text('Parameters : ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),),
+                const Text('Parameters : ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),),
                 const SizedBox(
                   height: 20,
                 ),

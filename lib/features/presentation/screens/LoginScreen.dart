@@ -19,7 +19,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool flag = false;
-  FlipCardController _flipCardController = FlipCardController();
+  final FlipCardController _flipCardController = FlipCardController();
   Color a(bool flag) {
     if (flag == false) {
       return Colors.pink;
@@ -127,8 +127,8 @@ class Admin extends StatefulWidget {
 
 class _AdminState extends State<Admin> {
   final TextEditingController userName = TextEditingController();
-
   final TextEditingController password = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -145,13 +145,11 @@ class _AdminState extends State<Admin> {
     });
   }
 
-
   @override
   void dispose() {
-    // TODO: implement dispose
-    super.dispose();
     userName.dispose();
     password.dispose();
+    super.dispose();
   }
 
   Future<void> _saveLoginInfo(bool isAdmin) async {
@@ -165,7 +163,39 @@ class _AdminState extends State<Admin> {
     return prefs.containsKey('isAdmin');
   }
 
+  Future<void> _login() async {
+    setState(() {
+      _isLoading = true;
+    });
 
+    String check = await Provider.of<EventListModel>(context, listen: false)
+        .loginAdmin(userName.text.trim(), password.text.trim());
+
+    if (check == 'Login successful') {
+      await _saveLoginInfo(true);
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AdminEventListScreen(),
+          ),
+        );
+      }
+    } else {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(check),
+            backgroundColor: Colors.red, // Customize as needed
+          ),
+        );
+      }
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -175,13 +205,17 @@ class _AdminState extends State<Admin> {
       height: sh * 0.5,
       width: sw * 0.9,
       decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [
+        gradient: LinearGradient(
+          colors: [
             const Color(0xFF0F0F1F).withOpacity(0.7),
             const Color(0xFF1D1D2F),
-          ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-          borderRadius: BorderRadius.circular(20.0)),
-      child: Center(
-          child: Column(
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
@@ -193,17 +227,18 @@ class _AdminState extends State<Admin> {
               keyboardType: TextInputType.emailAddress,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                  prefixIcon: const Icon(
-                    Icons.alternate_email,
-                    color: Colors.white,
-                  ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  contentPadding: EdgeInsets.zero,
-                  label: const Text(
-                    "UserName",
-                    style: TextStyle(color: Colors.white),
-                  )),
+                prefixIcon: const Icon(
+                  Icons.alternate_email,
+                  color: Colors.white,
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
+                contentPadding: EdgeInsets.zero,
+                label: const Text(
+                  "User",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
           ),
           Container(
@@ -216,54 +251,42 @@ class _AdminState extends State<Admin> {
               style: const TextStyle(color: Colors.white),
               obscureText: true,
               decoration: InputDecoration(
-                  prefixIcon: const Icon(
-                    Icons.lock_outline_rounded,
-                    color: Colors.white,
-                  ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  contentPadding: EdgeInsets.zero,
-                  label: const Text(
-                    "Password",
-                    style: TextStyle(color: Colors.white),
-                  )),
+                prefixIcon: const Icon(
+                  Icons.lock_outline_rounded,
+                  color: Colors.white,
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
+                contentPadding: EdgeInsets.zero,
+                label: const Text(
+                  "Password",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
           ),
           Container(
             width: sw * 0.4,
             decoration: BoxDecoration(
-                color: Colors.pink, borderRadius: BorderRadius.circular(20.0)),
+              color: Colors.pink,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
             child: TextButton(
-              onPressed: () async{
-                String user = userName.text;
-                String pass = password.text;
-                if (user == 'admin' && pass == 'admin123') {
-                  await _saveLoginInfo(true);
-                  if(context.mounted) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AdminEventListScreen(),
-                      ),
-                    );
-                  }
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Incorrect Credential'),
-                      backgroundColor: Colors.red, // Customize as needed
-                    ),
-                  );
-                }
+              onPressed: () async {
+                await _login();
               },
               child: Text(
                 "Submit",
                 style: kButtonStyle,
               ),
             ),
-          )
+          ),
+          Visibility(
+            visible: _isLoading,
+            child: const CircularProgressIndicator(),
+          ),
         ],
-      )),
+      ),
     );
   }
 }
@@ -277,10 +300,9 @@ class Judge extends StatefulWidget {
 
 class _JudgeState extends State<Judge> {
   final TextEditingController userName = TextEditingController();
-
   final TextEditingController password = TextEditingController();
-
   final TextEditingController idController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -290,10 +312,10 @@ class _JudgeState extends State<Judge> {
 
   @override
   void dispose() {
-    super.dispose();
     userName.dispose();
     password.dispose();
     idController.dispose();
+    super.dispose();
   }
 
   Future<void> _saveJudgeLoginInfo(int judgeId) async {
@@ -328,13 +350,17 @@ class _JudgeState extends State<Judge> {
       height: sh * 0.5,
       width: sw * 0.9,
       decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [
+        gradient: LinearGradient(
+          colors: [
             const Color(0xFF0F0F1F).withOpacity(0.7),
             const Color(0xFF1D1D2F),
-          ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-          borderRadius: BorderRadius.circular(20.0)),
-      child: Center(
-          child: Column(
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
@@ -351,7 +377,8 @@ class _JudgeState extends State<Judge> {
                   color: Colors.white,
                 ),
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
                 contentPadding: EdgeInsets.zero,
                 label: const Text(
                   "Judge Id",
@@ -362,58 +389,72 @@ class _JudgeState extends State<Judge> {
           ),
           Container(
             width: sw * 0.6,
-            decoration:
-                BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
             child: TextField(
               controller: userName,
               keyboardType: TextInputType.text,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                  prefixIcon: const Icon(
-                    Icons.alternate_email,
-                    color: Colors.white,
-                  ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  contentPadding: EdgeInsets.zero,
-                  label: const Text(
-                    "Judge Email",
-                    style: TextStyle(color: Colors.white),
-                  )),
+                prefixIcon: const Icon(
+                  Icons.alternate_email,
+                  color: Colors.white,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                contentPadding: EdgeInsets.zero,
+                label: const Text(
+                  "Judge Email",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
           ),
           Container(
             width: sw * 0.6,
-            decoration:
-                BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
             child: TextField(
               controller: password,
               keyboardType: TextInputType.text,
               style: const TextStyle(color: Colors.white),
               obscureText: true,
               decoration: InputDecoration(
-                  prefixIcon: const Icon(
-                    Icons.lock_outline_rounded,
-                    color: Colors.white,
-                  ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  contentPadding: EdgeInsets.zero,
-                  label: const Text(
-                    "Judge Password",
-                    style: TextStyle(color: Colors.white),
-                  )),
+                prefixIcon: const Icon(
+                  Icons.lock_outline_rounded,
+                  color: Colors.white,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                contentPadding: EdgeInsets.zero,
+                label: const Text(
+                  "Judge Password",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
           ),
           Container(
             width: sw * 0.4,
             decoration: BoxDecoration(
-                color: Colors.pink, borderRadius: BorderRadius.circular(20.0)),
+              color: Colors.pink,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
             child: TextButton(
               onPressed: () async {
+                setState(() {
+                  _isLoading = true;
+                });
                 String check =
                     await Provider.of<EventListModel>(context, listen: false)
                         .loginJudge(userName.text, password.text);
+                setState(() {
+                  _isLoading = false;
+                });
                 if (check == 'Login successful') {
                   int id = int.parse(idController.text);
                   await _saveJudgeLoginInfo(id);
@@ -443,9 +484,358 @@ class _JudgeState extends State<Judge> {
                 style: kButtonStyle,
               ),
             ),
-          )
+          ),
+          Visibility(
+            visible: _isLoading,
+            child: CircularProgressIndicator(),
+          ),
         ],
-      )),
+      ),
     );
   }
 }
+
+//
+// class _AdminState extends State<Admin> {
+//   final TextEditingController userName = TextEditingController();
+//
+//   final TextEditingController password = TextEditingController();
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _checkLoggedIn().then((loggedIn) {
+//       if (loggedIn) {
+//         Navigator.pushReplacement(
+//           context,
+//           MaterialPageRoute(
+//             builder: (context) => const AdminEventListScreen(),
+//           ),
+//         );
+//       }
+//     });
+//   }
+//
+//   @override
+//   void dispose() {
+//     // TODO: implement dispose
+//     super.dispose();
+//     userName.dispose();
+//     password.dispose();
+//   }
+//
+//   Future<void> _saveLoginInfo(bool isAdmin) async {
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     prefs.setBool('isAdmin', isAdmin);
+//     // You can also save other user information if needed
+//   }
+//
+//   Future<bool> _checkLoggedIn() async {
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     return prefs.containsKey('isAdmin');
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     double sh = MediaQuery.of(context).size.height;
+//     double sw = MediaQuery.of(context).size.width;
+//     return Container(
+//       height: sh * 0.5,
+//       width: sw * 0.9,
+//       decoration: BoxDecoration(
+//           gradient: LinearGradient(colors: [
+//             const Color(0xFF0F0F1F).withOpacity(0.7),
+//             const Color(0xFF1D1D2F),
+//           ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+//           borderRadius: BorderRadius.circular(20.0)),
+//       child: Center(
+//           child: Column(
+//         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//         children: [
+//           Container(
+//             width: sw * 0.6,
+//             decoration:
+//                 BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
+//             child: TextField(
+//               controller: userName,
+//               keyboardType: TextInputType.emailAddress,
+//               style: const TextStyle(color: Colors.white),
+//               decoration: InputDecoration(
+//                   prefixIcon: const Icon(
+//                     Icons.alternate_email,
+//                     color: Colors.white,
+//                   ),
+//                   border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(10.0)),
+//                   contentPadding: EdgeInsets.zero,
+//                   label: const Text(
+//                     "UserName",
+//                     style: TextStyle(color: Colors.white),
+//                   )),
+//             ),
+//           ),
+//           Container(
+//             width: sw * 0.6,
+//             decoration:
+//                 BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
+//             child: TextField(
+//               controller: password,
+//               keyboardType: TextInputType.visiblePassword,
+//               style: const TextStyle(color: Colors.white),
+//               obscureText: true,
+//               decoration: InputDecoration(
+//                 prefixIcon: const Icon(
+//                   Icons.lock_outline_rounded,
+//                   color: Colors.white,
+//                 ),
+//                 border: OutlineInputBorder(
+//                     borderRadius: BorderRadius.circular(10.0)),
+//                 contentPadding: EdgeInsets.zero,
+//                 label: const Text(
+//                   "Password",
+//                   style: TextStyle(color: Colors.white),
+//                 ),
+//               ),
+//             ),
+//           ),
+//           Container(
+//             width: sw * 0.4,
+//             decoration: BoxDecoration(
+//                 color: Colors.pink, borderRadius: BorderRadius.circular(20.0)),
+//             child: TextButton(
+//               onPressed: () async {
+//                 String check =
+//                     await Provider.of<EventListModel>(context, listen: false)
+//                         .loginAdmin(userName.text.trim(), password.text.trim());
+//                 if (check == 'Login successful') {
+//                   await _saveLoginInfo(true);
+//                   if (context.mounted) {
+//                     Navigator.pushReplacement(
+//                       context,
+//                       MaterialPageRoute(
+//                         builder: (context) => const AdminEventListScreen(),
+//                       ),
+//                     );
+//                   }
+//                 } else {
+//                   if (context.mounted) {
+//                     ScaffoldMessenger.of(context).showSnackBar(
+//                       SnackBar(
+//                         content: Text(check),
+//                         backgroundColor: Colors.red, // Customize as needed
+//                       ),
+//                     );
+//                   }
+//                 }
+//                 // if (user == 'admin' && pass == 'admin123') {
+//                 //   await _saveLoginInfo(true);
+//                 //   if (context.mounted) {
+//                 //     Navigator.pushReplacement(
+//                 //       context,
+//                 //       MaterialPageRoute(
+//                 //         builder: (context) => const AdminEventListScreen(),
+//                 //       ),
+//                 //     );
+//                 //   }
+//                 // } else {
+//                 //   ScaffoldMessenger.of(context).showSnackBar(
+//                 //     const SnackBar(
+//                 //       content: Text('Incorrect Credential'),
+//                 //       backgroundColor: Colors.red, // Customize as needed
+//                 //     ),
+//                 //   );
+//                 // }
+//               },
+//               child: Text(
+//                 "Submit",
+//                 style: kButtonStyle,
+//               ),
+//             ),
+//           )
+//         ],
+//       )),
+//     );
+//   }
+// }
+
+// class Judge extends StatefulWidget {
+//   const Judge({super.key});
+//
+//   @override
+//   State<Judge> createState() => _JudgeState();
+// }
+//
+// class _JudgeState extends State<Judge> {
+//   final TextEditingController userName = TextEditingController();
+//
+//   final TextEditingController password = TextEditingController();
+//
+//   final TextEditingController idController = TextEditingController();
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _checkJudgeLoggedIn();
+//   }
+//
+//   @override
+//   void dispose() {
+//     super.dispose();
+//     userName.dispose();
+//     password.dispose();
+//     idController.dispose();
+//   }
+//
+//   Future<void> _saveJudgeLoginInfo(int judgeId) async {
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     prefs.setBool('isJudgeLoggedIn', true);
+//     prefs.setInt('judgeId', judgeId); // Save judge ID
+//   }
+//
+//   Future<void> _checkJudgeLoggedIn() async {
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     bool loggedIn = prefs.containsKey('isJudgeLoggedIn');
+//     if (loggedIn) {
+//       int judgeId = prefs.getInt('judgeId') ?? 0; // Get judge ID
+//       if (judgeId != 0) {
+//         if (context.mounted) {
+//           Navigator.pushReplacement(
+//             context,
+//             MaterialPageRoute(
+//               builder: (context) => JudgeEventScreen(judgeId: judgeId),
+//             ),
+//           );
+//         }
+//       }
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     double sh = MediaQuery.of(context).size.height;
+//     double sw = MediaQuery.of(context).size.width;
+//     return Container(
+//       height: sh * 0.5,
+//       width: sw * 0.9,
+//       decoration: BoxDecoration(
+//           gradient: LinearGradient(colors: [
+//             const Color(0xFF0F0F1F).withOpacity(0.7),
+//             const Color(0xFF1D1D2F),
+//           ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+//           borderRadius: BorderRadius.circular(20.0)),
+//       child: Center(
+//           child: Column(
+//         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//         children: [
+//           Container(
+//             width: sw * 0.6,
+//             decoration: BoxDecoration(
+//               borderRadius: BorderRadius.circular(20.0),
+//             ),
+//             child: TextField(
+//               style: const TextStyle(color: Colors.white),
+//               controller: idController,
+//               decoration: InputDecoration(
+//                 prefixIcon: const Icon(
+//                   CupertinoIcons.profile_circled,
+//                   color: Colors.white,
+//                 ),
+//                 border: OutlineInputBorder(
+//                     borderRadius: BorderRadius.circular(10.0)),
+//                 contentPadding: EdgeInsets.zero,
+//                 label: const Text(
+//                   "Judge Id",
+//                   style: TextStyle(color: Colors.white),
+//                 ),
+//               ),
+//             ),
+//           ),
+//           Container(
+//             width: sw * 0.6,
+//             decoration:
+//                 BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
+//             child: TextField(
+//               controller: userName,
+//               keyboardType: TextInputType.text,
+//               style: const TextStyle(color: Colors.white),
+//               decoration: InputDecoration(
+//                   prefixIcon: const Icon(
+//                     Icons.alternate_email,
+//                     color: Colors.white,
+//                   ),
+//                   border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(10.0)),
+//                   contentPadding: EdgeInsets.zero,
+//                   label: const Text(
+//                     "Judge Email",
+//                     style: TextStyle(color: Colors.white),
+//                   )),
+//             ),
+//           ),
+//           Container(
+//             width: sw * 0.6,
+//             decoration:
+//                 BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
+//             child: TextField(
+//               controller: password,
+//               keyboardType: TextInputType.text,
+//               style: const TextStyle(color: Colors.white),
+//               obscureText: true,
+//               decoration: InputDecoration(
+//                   prefixIcon: const Icon(
+//                     Icons.lock_outline_rounded,
+//                     color: Colors.white,
+//                   ),
+//                   border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(10.0)),
+//                   contentPadding: EdgeInsets.zero,
+//                   label: const Text(
+//                     "Judge Password",
+//                     style: TextStyle(color: Colors.white),
+//                   )),
+//             ),
+//           ),
+//           Container(
+//             width: sw * 0.4,
+//             decoration: BoxDecoration(
+//                 color: Colors.pink, borderRadius: BorderRadius.circular(20.0)),
+//             child: TextButton(
+//               onPressed: () async {
+//                 String check =
+//                     await Provider.of<EventListModel>(context, listen: false)
+//                         .loginJudge(userName.text, password.text);
+//                 if (check == 'Login successful') {
+//                   int id = int.parse(idController.text);
+//                   await _saveJudgeLoginInfo(id);
+//                   if (context.mounted) {
+//                     Navigator.pushReplacement(
+//                       context,
+//                       MaterialPageRoute(
+//                         builder: (context) => JudgeEventScreen(
+//                           judgeId: id,
+//                         ),
+//                       ),
+//                     );
+//                   }
+//                 } else {
+//                   if (context.mounted) {
+//                     ScaffoldMessenger.of(context).showSnackBar(
+//                       SnackBar(
+//                         content: Text(check),
+//                         backgroundColor: Colors.red, // Customize as needed
+//                       ),
+//                     );
+//                   }
+//                 }
+//               },
+//               child: Text(
+//                 "Submit",
+//                 style: kButtonStyle,
+//               ),
+//             ),
+//           )
+//         ],
+//       )),
+//     );
+//   }
+// }

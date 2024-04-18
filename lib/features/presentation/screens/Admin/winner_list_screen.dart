@@ -13,7 +13,7 @@ class WinnerListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var eventListModel = Provider.of<EventListModel>(context, listen: false);
+    var eventListModel = Provider.of<EventListModel>(context, listen: true);
     Future<void> refreshWinners() async {
       // Call the function to fetch winners again
       await eventListModel.refresh();

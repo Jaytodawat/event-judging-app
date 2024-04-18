@@ -19,35 +19,18 @@ class AddTeam extends StatelessWidget {
   final TextEditingController leaderNameController = TextEditingController();
   final TextEditingController leaderEmailController = TextEditingController();
 
-  Team _addTeam(){
+  Team _addTeam() {
     String name = nameController.text;
     String leaderName = leaderNameController.text;
     String leaderEmail = leaderEmailController.text;
-    // List<String> parameters = event.parameterList;
-    // Map<String, int> marks = {};
-    // for(int i = 0; i < parameters.length; i++){
-    //   String parameter = parameters[i];
-    //   marks[parameter] = 0;
-    // }
-    // marks["total"] = 0;
     Team team = Team(name, leaderEmail, event.id);
-    // event.teams.add(team);
     return team;
   }
-  // Future<Team> addTeam(Team team, TeamScore teamScore) async {
-  //   TeamModel teamModel = TeamModel.fromEntity(team);
-  //   int id = await apiService.addTeam(teamModel, teamScore);
-  //   team.id = id;
-  //   refreshList();
-  //   return team;
-  //
-  // }
 
   @override
   Widget build(BuildContext context) {
     double sh = MediaQuery.of(context).size.height;
     double sw = MediaQuery.of(context).size.width;
-    final List<Event> eventList = Provider.of<EventListModel>(context).events;
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -68,7 +51,6 @@ class AddTeam extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-
                 Container(
                   width: sw * 0.6,
                   decoration:
@@ -77,18 +59,19 @@ class AddTeam extends StatelessWidget {
                     controller: nameController,
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                        prefixIcon: const Icon(
-                          Icons.pending_outlined,
-                          color: Colors.white,
-                        ),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        contentPadding: EdgeInsets.zero,
-                        label: const Text(
-                          "Team Name",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        )),
+                      prefixIcon: const Icon(
+                        Icons.pending_outlined,
+                        color: Colors.white,
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      contentPadding: EdgeInsets.zero,
+                      label: const Text(
+                        "Team Name",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(
@@ -102,18 +85,19 @@ class AddTeam extends StatelessWidget {
                     controller: leaderNameController,
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                        prefixIcon: const Icon(
-                          Icons.pending_outlined,
-                          color: Colors.white,
-                        ),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        contentPadding: EdgeInsets.zero,
-                        label: const Text(
-                          "Leader Name",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        )),
+                      prefixIcon: const Icon(
+                        Icons.pending_outlined,
+                        color: Colors.white,
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      contentPadding: EdgeInsets.zero,
+                      label: const Text(
+                        "Leader Name",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(
@@ -155,7 +139,8 @@ class AddTeam extends StatelessWidget {
                   child: TextButton(
                     onPressed: () {
                       Team team = _addTeam();
-                      Provider.of<EventListModel>(context, listen: false).addTeam(team);
+                      Provider.of<EventListModel>(context, listen: false)
+                          .addTeam(team);
                       Navigator.pop(context);
                     },
                     child: Text(
