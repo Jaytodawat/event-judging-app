@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:judge_assist_app/features/data/models/TeamDetails.dart';
-// import 'package:judge_assist_app/providers/event_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/event_provider.dart';
@@ -12,7 +11,6 @@ class TeamDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Team Details', style: TextStyle(color:  Colors.white),),

@@ -43,11 +43,6 @@ class ApiService {
         final List<dynamic> responseData = response.data;
         // print(responseData);
         return responseData.map((json) => Winner.fromJson(json)).toList();
-        // final List<dynamic> responseData = response.data;
-        // print(responseData);
-        // return responseData
-        //     .map((eventJson) => Winner.fromJson(eventJson))
-        //     .toList();
       } else {
         throw Exception('Failed to load winner list');
       }
@@ -73,8 +68,6 @@ class ApiService {
       print(response.statusCode);
       if (response.statusCode == 200) {
         final responseData = response.data[0];
-        // print(responseData[0]);
-        // EventModel eventMode = EventModel.fromJson(responseData);
         return int.parse(responseData["pk_eventid"]);
       } else {
         throw Exception('Failed to load events');
@@ -84,24 +77,7 @@ class ApiService {
     }
   }
 
-  // Future<EventModel> getJudgeEvents(int judgeId) async {
-  //   // print("ApiService1");
-  //   try {
-  //     final response = await dio.get('https://judging-be.onrender.com/dev/api/judge/events/$judgeId');
-  //     print(response.statusCode);
-  //     if (response.statusCode == 200) {
-  //       final responseData = response.data[0];
-  //       // print(responseData[0]);
-  //       int id = int.parse(responseData["pk_eventid"]);
-  //
-  //       return int.parse(responseData["pk_eventid"]);
-  //     } else {
-  //       throw Exception('Failed to load events');
-  //     }
-  //   } catch (e) {
-  //     throw Exception('Failed to load events: $e');
-  //   }
-  // }
+
 
   Future<void> addEvent(EventModel eventModel) async {
     Map<String, dynamic> eventBody = eventModel.toJson();
@@ -137,7 +113,7 @@ class ApiService {
     }
   }
 
-  Future<int> addTeam1(TeamModel teamModel) async {
+  Future<int> addTeam(TeamModel teamModel) async {
     Map<String, dynamic> teamData = teamModel.toJson();
     try {
       final response = await dio.post(
@@ -158,26 +134,7 @@ class ApiService {
     }
   }
 
-  Future<int> addTeam(TeamModel teamModel, TeamScore teamScore) async {
-    Map<String, dynamic> teamData = teamModel.toJson();
-    try {
-      final response = await dio.post(
-          'https://judging-be.onrender.com/dev/api/admin/team',
-          data: teamData);
 
-      if (response.statusCode == 200) {
-        int teamId = response.data["pk_teamid"];
-        teamScore.teamId = teamId;
-        // addTeamScore(teamScore);
-        return teamId;
-      } else {
-        throw Exception('Failed to add team');
-      }
-    } catch (e) {
-      print(e.toString());
-      throw Exception('Failed to add team: ');
-    }
-  }
 
   Future<Judge> addJudge(Judge judge) async {
     Map<String, dynamic> judgeData = judge.toJson();
@@ -260,6 +217,45 @@ class ApiService {
       throw Exception('Failed to get team score: $e');
     }
   }
+// Future<EventModel> getJudgeEvents(int judgeId) async {
+//   // print("ApiService1");
+//   try {
+//     final response = await dio.get('https://judging-be.onrender.com/dev/api/judge/events/$judgeId');
+//     print(response.statusCode);
+//     if (response.statusCode == 200) {
+//       final responseData = response.data[0];
+//       // print(responseData[0]);
+//       int id = int.parse(responseData["pk_eventid"]);
+//
+//       return int.parse(responseData["pk_eventid"]);
+//     } else {
+//       throw Exception('Failed to load events');
+//     }
+//   } catch (e) {
+//     throw Exception('Failed to load events: $e');
+//   }
+// }
+
+// Future<int> addTeam(TeamModel teamModel, TeamScore teamScore) async {
+//   Map<String, dynamic> teamData = teamModel.toJson();
+//   try {
+//     final response = await dio.post(
+//         'https://judging-be.onrender.com/dev/api/admin/team',
+//         data: teamData);
+//
+//     if (response.statusCode == 200) {
+//       int teamId = response.data["pk_teamid"];
+//       teamScore.teamId = teamId;
+//       // addTeamScore(teamScore);
+//       return teamId;
+//     } else {
+//       throw Exception('Failed to add team');
+//     }
+//   } catch (e) {
+//     print(e.toString());
+//     throw Exception('Failed to add team: ');
+//   }
+// }
 
 
 

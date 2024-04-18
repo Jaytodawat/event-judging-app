@@ -79,7 +79,7 @@ class EventListModel extends ChangeNotifier{
 
   Future<Team> addTeam(Team team) async {
     TeamModel teamModel = TeamModel.fromEntity(team);
-    int id = await apiService.addTeam1(teamModel);
+    int id = await apiService.addTeam(teamModel);
     team.id = id;
     refreshList();
     return team;
@@ -98,10 +98,7 @@ class EventListModel extends ChangeNotifier{
     return addedJudge;
   }
 
-  void clearEvents(){
-    _events.clear();
-    refreshList();
-  }
+
   Future<String> loginJudge(String email, String password) async{
     Judge judge = Judge.login(email, password);
     String check = await apiService.loginJudge(judge);
@@ -118,18 +115,25 @@ class EventListModel extends ChangeNotifier{
     return teamDetails;
   }
 
+  void addScore(TeamScore teamScore){
+    apiService.addTeamScore(teamScore);
+    refreshList();
+  }
+
   // void getJudgeEvents(int judgeId) async {
   //   EventModel eventModel = await apiService.getJudgeEvents(judgeId);
   //   _events.add(eventModel.toEntity());
   //   refreshList();
   // }
 
+  // void clearEvents(){
+  //   _events.clear();
+  //   refreshList();
+  // }
 
 
-  void addScore(TeamScore teamScore){
-    apiService.addTeamScore(teamScore);
-    refreshList();
-  }
+
+
 
 
 }
