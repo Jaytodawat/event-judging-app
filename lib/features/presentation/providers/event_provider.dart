@@ -108,6 +108,11 @@ class EventListModel extends ChangeNotifier{
     return check;
   }
 
+  Future<String> loginAdmin(String email, String password) async{
+    String check = await apiService.loginAdmin(email, password);
+    return check;
+  }
+
   Future<TeamDetails> getTeamScore(int teamId) async{
     TeamDetails teamDetails = await apiService.getTeamScores(teamId);
     return teamDetails;

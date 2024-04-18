@@ -198,6 +198,29 @@ class ApiService {
     }
   }
 
+  Future<String> loginAdmin(String email, String password) async {
+    Map<String, dynamic> judgeData = {
+      "email": email,
+      "password": password
+    };
+    try {
+      final response = await dio.post(
+        'https://judging-be.onrender.com/dev/api/admin/login',
+        data: judgeData,
+      );
+      print(response.statusCode);
+      if (response.statusCode! >= 400) {
+        return 'Invalid credentials';
+      } else if (response.statusCode == 200) {
+        return 'Login successful';
+      } else {
+        throw Exception('Failed to login');
+      }
+    } catch (e) {
+      return 'Failed to login'; // Return generic error message
+    }
+  }
+
   Future<String> loginJudge(Judge judge) async {
     Map<String, dynamic> judgeData = judge.toLoginJson();
     try {
