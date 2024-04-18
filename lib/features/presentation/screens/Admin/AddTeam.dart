@@ -138,10 +138,19 @@ class AddTeam extends StatelessWidget {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      Team team = _addTeam();
-                      Provider.of<EventListModel>(context, listen: false)
-                          .addTeam(team);
-                      Navigator.pop(context);
+                      try {
+                        Team team = _addTeam();
+                        Provider.of<EventListModel>(context, listen: false)
+                            .addTeam(team);
+                        Navigator.pop(context);
+                      } catch (e){
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Failed to add team!'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
                     },
                     child: Text(
                       "Add",

@@ -253,10 +253,19 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   ),
                   child: TextButton(
                     onPressed: () {
+                      try{
                       Event event = _addEvent();
                       Provider.of<EventListModel>(context, listen: false)
                           .addEvent(event); // Add event to the database
                       Navigator.pop(context);
+                      } catch(e){
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Failed to create event!'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
                     },
                     child: Text(
                       "Add",

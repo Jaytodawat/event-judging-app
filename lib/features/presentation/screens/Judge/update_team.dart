@@ -11,7 +11,11 @@ class UpdateTeamScreen extends StatelessWidget {
   final Event event;
   final Team team;
   final int judgeId;
-  UpdateTeamScreen({super.key, required this.event, required this.team, required this.judgeId});
+  UpdateTeamScreen(
+      {super.key,
+      required this.event,
+      required this.team,
+      required this.judgeId});
 
   // final TextEditingController nameController = TextEditingController();
   // final TextEditingController idController = TextEditingController();
@@ -74,20 +78,36 @@ class UpdateTeamScreen extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                Text('Team Id : ${team.id}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),),
+                Text(
+                  'Team Id : ${team.id}',
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
-                Text('Team Name : ${team.name}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),),
+                Text(
+                  'Team Name : ${team.name}',
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
-
-                const Text('Parameters : ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),),
+                const Text(
+                  'Parameters : ',
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
-
                 Expanded(
                   child: ListView.builder(
                     itemCount: parameters.length,
@@ -107,9 +127,19 @@ class UpdateTeamScreen extends StatelessWidget {
         bottomNavigationBar: RoundedButton(
           text: "Submit",
           onPressed: () {
-            TeamScore teamScore = _addTeam(team, inputList);
-            Provider.of<EventListModel>(context, listen: false).addScore(teamScore);
-            Navigator.pop(context);
+            try {
+              TeamScore teamScore = _addTeam(team, inputList);
+              Provider.of<EventListModel>(context, listen: false)
+                  .addScore(teamScore);
+              Navigator.pop(context);
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Failed to update score!'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
           },
         ),
       ),
