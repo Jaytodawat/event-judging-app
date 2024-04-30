@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:judge_assist_app/constants.dart';
 import 'package:judge_assist_app/features/presentation/screens/Admin/admin_event_list_screen.dart';
-import 'package:judge_assist_app/features/presentation/screens/Judge/event_screen.dart';
-import 'package:judge_assist_app/features/presentation/screens/Judge/home_screen.dart';
 
 class AdminHomeScreen extends StatelessWidget {
   const AdminHomeScreen({super.key});
@@ -25,7 +23,7 @@ class AdminHomeScreen extends StatelessWidget {
           children: [
             TextButton(onPressed: (){}, child: Text("Register Event",style: kButtonStyle,)),
             TextButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AdminEventListScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminEventListScreen()));
             }, child: Text("View All Events",style: kButtonStyle,),)
           ],
         ),

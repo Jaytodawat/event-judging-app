@@ -5,10 +5,8 @@ import 'package:judge_assist_app/features/presentation/screens/Judge/event_scree
 import 'package:judge_assist_app/features/presentation/widgets/event_card.dart';
 import 'package:judge_assist_app/features/presentation/providers/event_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../domain/entities/Event.dart';
-import '../../../domain/entities/Team.dart';
 import '../LoginScreen.dart';
 
 class JudgeEventScreen extends StatelessWidget {
@@ -53,15 +51,17 @@ class JudgeEventScreen extends StatelessWidget {
         child: RefreshIndicator(
           onRefresh: () => refreshEvents(),
           child: FutureBuilder<List<Event>>(
-            future: eventListModel.getAllEvents(),
+            future: eventListModel.getJudgeEvents(judgeId),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
               } else if (snapshot.hasError) {
+                // print(snapshot.error);
                 String errorMessage = '';
                 if (snapshot.error is Exception) {
+                  // print(snapshot.error);
                   final error = snapshot.error as Exception;
                   if (error is DioException) {
                     if (error.response?.statusCode == 400) {
@@ -69,8 +69,8 @@ class JudgeEventScreen extends StatelessWidget {
                     } else if (error.response?.statusCode == 502) {
                       errorMessage = 'Server down';
                     } else {
-                      print(error.response?.statusCode);
-                      errorMessage = 'Unknown error';
+                      // print(error.response?.statusCode);
+                      errorMessage = 'Server Down';
                     }
                   } else {
                     // print(error.response?.statusCode);
@@ -78,7 +78,7 @@ class JudgeEventScreen extends StatelessWidget {
                   }
                 } else {
                   // print(snapshot.error.response?.statusCode);
-                  errorMessage = 'No Team Judged Yet in this event';
+                  errorMessage = 'Failed to load events!';
                 }
                 return Center(
                   child: Text(

@@ -1,12 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:judge_assist_app/features/presentation/screens/Admin/AddJudge.dart';
-import 'package:judge_assist_app/features/presentation/screens/Admin/AddTeam.dart';
+import 'package:judge_assist_app/features/presentation/screens/Admin/add_judge.dart';
+import 'package:judge_assist_app/features/presentation/screens/Admin/add_team.dart';
 import 'package:judge_assist_app/features/presentation/screens/Admin/team_detail_screen.dart';
 import 'package:judge_assist_app/features/presentation/screens/Admin/winner_list_screen.dart';
 import 'package:provider/provider.dart';
-
-import '../../../data/models/Winner.dart';
 import '../../../domain/entities/Event.dart';
 import '../../../domain/entities/Team.dart';
 import '../../providers/event_provider.dart';
@@ -68,7 +66,7 @@ class EventTeamScreen extends StatelessWidget {
                       } else if (error.response?.statusCode == 502) {
                         errorMessage = 'Server down';
                       } else {
-                        print(error.response?.statusCode);
+                        // print(error.response?.statusCode);
                         errorMessage = 'Unknown error';
                       }
                     } else {

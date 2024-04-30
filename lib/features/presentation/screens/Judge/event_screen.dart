@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:judge_assist_app/features/domain/entities/Event.dart';
 import 'package:judge_assist_app/features/domain/entities/Team.dart';
 import 'package:judge_assist_app/features/presentation/screens/Judge/update_team.dart';
-import 'package:judge_assist_app/features/presentation/widgets/custom_buttons.dart';
 import 'package:judge_assist_app/features/presentation/providers/event_provider.dart';
 import 'package:judge_assist_app/features/presentation/widgets/team_card.dart';
 import 'package:provider/provider.dart';
@@ -51,7 +50,7 @@ class EventScreen extends StatelessWidget {
                       } else if (error.response?.statusCode == 502) {
                         errorMessage = 'Server down';
                       } else {
-                        print(error.response?.statusCode);
+                        // print(error.response?.statusCode);
                         errorMessage = 'Unknown error';
                       }
                     } else {

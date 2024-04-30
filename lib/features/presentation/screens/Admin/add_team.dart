@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:judge_assist_app/features/data/models/TeamScore.dart';
 import 'package:judge_assist_app/features/domain/entities/Event.dart';
 import 'package:judge_assist_app/features/domain/entities/Team.dart';
 import 'package:provider/provider.dart';
-
-import '../../../data/models/TeamModel.dart';
 import '../../providers/event_provider.dart';
-import '../../widgets/custom_buttons.dart';
 import 'package:judge_assist_app/constants.dart';
-
-import 'admin_event_list_screen.dart';
 
 class AddTeam extends StatelessWidget {
   final Event event;
@@ -21,7 +15,7 @@ class AddTeam extends StatelessWidget {
 
   Team _addTeam() {
     String name = nameController.text;
-    String leaderName = leaderNameController.text;
+    // String leaderName = leaderNameController.text;
     String leaderEmail = leaderEmailController.text;
     Team team = Team(name, leaderEmail, event.id);
     return team;

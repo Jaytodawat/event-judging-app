@@ -14,29 +14,15 @@ class EventListModel extends ChangeNotifier{
 
   final ApiService apiService;
 
-  List<Event> _events = [];
+  // List<Event> _events = [];
 
   EventListModel({required this.apiService}){
-    print("EventListModel");
+    // print("EventListModel");
   }
 
 
-  // EventListModel(this.apiService){
-  //   // List<Event> eventList = [];
-  //
-  //   // Event e1 = Event(1, "Credenz", ["Presentation", "Code", "Team Performance", "Functionality"], []);
-  //   // Event e2 = Event(2, "Pradnya", ["Code Quality", "Efficiency", "Team Performance", "Correctness"], []);
-  //   // Event e3 = Event(3, "Xenia", ["Presentation", "Code", "Team Performance"], []);
-  //   // Event e4 = Event(4, "INC", ["Presentation", "Innovation", "Team Performance", "Impact"], []);
-  //   // eventList.add(e1);
-  //   // eventList.add(e2);
-  //   // eventList.add(e3);
-  //   // eventList.add(e4);
-  //   // _events = eventList;
-  // }
 
-
-  List<Event> get events => _events;
+  // List<Event> get events => _events;
 
   void refreshList(){
     notifyListeners();
@@ -57,6 +43,12 @@ class EventListModel extends ChangeNotifier{
     final eventModels = await apiService.getEvents();
     List<Event> eventList = eventModels.map((model)=>model.toEntity()).toList();
 
+    return eventList;
+  }
+
+  Future<List<Event>> getJudgeEvents(int judgeId) async {
+    final eventModels = await apiService.getJudgeEvents(judgeId);
+    List<Event> eventList = eventModels.map((model)=>model.toEntity()).toList();
     return eventList;
   }
 
@@ -120,11 +112,7 @@ class EventListModel extends ChangeNotifier{
     refreshList();
   }
 
-  // void getJudgeEvents(int judgeId) async {
-  //   EventModel eventModel = await apiService.getJudgeEvents(judgeId);
-  //   _events.add(eventModel.toEntity());
-  //   refreshList();
-  // }
+
 
   // void clearEvents(){
   //   _events.clear();

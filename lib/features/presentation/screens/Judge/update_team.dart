@@ -22,7 +22,6 @@ class UpdateTeamScreen extends StatelessWidget {
   late final List<String> parameters;
 
   TeamScore _addTeam(Team team, List<CustomTextField> inputList) {
-    int total = 0;
     Map<String, int> parameterMap = event.parameterId;
     Map<int?, int> scoreMap = {};
     for (int i = 0; i < inputList.length; i++) {
@@ -30,10 +29,7 @@ class UpdateTeamScreen extends StatelessWidget {
       String parameter = parameters[i];
       int score = int.parse(customTextField.controller.text);
       scoreMap[parameterMap[parameter]] = score;
-      // team.marks[parameter] = score;
-      // total += score;
     }
-    // team.marks["total"] = total;
     TeamScore teamScore = TeamScore(event.id, team.id, judgeId, scoreMap);
     return teamScore;
   }
