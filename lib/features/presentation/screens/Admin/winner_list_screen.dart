@@ -38,19 +38,22 @@ class WinnerListScreen extends StatelessWidget {
               } else if (snapshot.hasError) {
                 String errorMessage = '';
                 if (snapshot.error is Exception) {
+                  // print(snapshot.error.hashCode);
                   final error = snapshot.error as Exception;
+                  // print(error is DioException);
                   if (error is DioException) {
+                    // print(error.response?.statusCode);
                     if (error.response?.statusCode == 400) {
                       errorMessage = 'Wrong input';
                     } else if (error.response?.statusCode == 502) {
                       errorMessage = 'Server down';
                     } else {
-                      print(error.response?.statusCode);
+                      // print(error.response?.statusCode);
                       errorMessage = 'Unknown error';
                     }
                   } else {
                     // print(error.response?.statusCode);
-                    errorMessage = 'Unknown error';
+                    errorMessage = 'No Teams Judged yet';
                   }
                 } else {
                   // print(snapshot.error.response?.statusCode);
@@ -58,8 +61,8 @@ class WinnerListScreen extends StatelessWidget {
                 }
                 return Center(
                   child: Text(
-                    'Failed To Load Data : $errorMessage',
-                    style: TextStyle(color: Colors.white),
+                    errorMessage,
+                    style: const TextStyle(color: Colors.white),
                   ),
                 );
               } else {

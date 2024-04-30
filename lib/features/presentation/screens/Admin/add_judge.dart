@@ -107,8 +107,8 @@ class _AddJudgeState extends State<AddJudge> {
                     child: TextButton(
                       onPressed: () async {
                         try {
-                          Judge judge = Judge(nameController.text,
-                              emailController.text, widget.event.id);
+                          Judge judge = Judge(nameController.text.trim(),
+                              emailController.text.trim(), widget.event.id);
                           Judge addedJudge = await Provider.of<EventListModel>(
                             context,
                             listen: false,

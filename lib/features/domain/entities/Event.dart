@@ -6,14 +6,15 @@ class Event{
   late String name;
   late DateTime startDate;
   late DateTime endDate;
-  late DateTime createdDate;
   late List<String> parameterList;
   late Map<String, int> parameterId;
   late List<int> teams;
+  late Map<String, int> parameterMarks;
+  late String resultType;
 
-  Event(this.id, this.name, this.startDate, this.endDate, this.createdDate,
+  Event(this.id, this.name, this.startDate, this.endDate,
       this.parameterList, this.parameterId, this.teams);
 
-  Event.name(this.name, this.startDate, this.endDate,  this.parameterList);
+  Event.name(this.name, this.startDate, this.endDate,  this.parameterList, this.parameterMarks, this.resultType);
 }
 

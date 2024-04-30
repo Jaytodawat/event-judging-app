@@ -20,19 +20,22 @@ class Winner{
   // }
 
   factory Winner.fromJson(Map<String, dynamic> json) {
+    String averageScoreString = json['average_score'];
+    double averageScoreDouble = double.parse(averageScoreString);
+    int score = averageScoreDouble.toInt();
     return Winner(
       json['team_id'] as int,
       json['event_id'] as int,
       json['team_name'] as String,
       json['event_name'] as String,
-      _parseScore(json['scores']),
+      score,
     );
   }
 
   static int _parseScore(dynamic score) {
     if (score is int) {
       return score;
-    } else if (score is String) {
+    } else {
       return int.tryParse(score) ?? 0; // Default value if parsing fails
     }
     return 0; // Default value if score is not int or String
