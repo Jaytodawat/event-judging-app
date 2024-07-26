@@ -5,6 +5,7 @@ import 'package:judge_assist_app/features/presentation/screens/Admin/create_even
 import 'package:judge_assist_app/features/presentation/screens/Admin/admin_event_teams_screen.dart';
 import 'package:judge_assist_app/features/presentation/screens/LoginScreen.dart';
 import 'package:provider/provider.dart';
+
 import '../../../domain/entities/Event.dart';
 import '../../providers/event_provider.dart';
 import '../../widgets/custom_buttons.dart';
@@ -16,8 +17,7 @@ class AdminEventListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var eventListModel = Provider.of<EventListModel>(context, listen: true);
-    AuthProvider auth = Provider.of<AuthProvider>(context, listen: false);
-
+    Auth auth = Auth();
     Future<void> refreshEvents() async {
       await eventListModel.refresh(); // Call the method to fetch events again
     }
@@ -34,7 +34,7 @@ class AdminEventListScreen extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.logout_outlined),
               onPressed: () async {
-                await auth.logout();
+                await auth.clearLoginInfo();
                 if (context.mounted) {
                   Navigator.pushReplacement(
                     context,
@@ -68,13 +68,16 @@ class AdminEventListScreen extends StatelessWidget {
                       } else if (error.response?.statusCode == 502) {
                         errorMessage = 'Server down';
                       } else {
+                        // print(error.response?.statusCode);
                         errorMessage = 'Unknown error';
                       }
                     } else {
+                      // print(error.response?.statusCode);
                       errorMessage = 'Unknown error';
                     }
                   } else {
-                    errorMessage = 'Failed to load events!';
+                    // print(snapshot.error.response?.statusCode);
+                    errorMessage = 'No Team Judged Yet in this event';
                   }
                   return Center(
                     child: Text(

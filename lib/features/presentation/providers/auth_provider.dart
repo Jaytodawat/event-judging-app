@@ -1,37 +1,32 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/material.dart';
+import '../../data/datasource/api_service.dart';
 
-class Auth{
-  // SharedPreferences prefs;
-  Future<void> saveLoginInfo(bool isAdmin) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isAdmin', isAdmin);
-    // You can also save other user information if needed
-  }
+class AuthProvider with ChangeNotifier {
+  final ApiService apiService;
+  bool _isAuthenticated = false;
 
-  Future<bool> checkLoggedIn() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.containsKey('isAdmin');
-  }
+  AuthProvider({required this.apiService});
 
-  Future<int> checkJudgeLoggedIn() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool loggedIn = prefs.containsKey('isJudgeLoggedIn');
+  bool get isAuthenticated => _isAuthenticated;
 
-    if (loggedIn) {
-      int judgeId = prefs.getInt('judgeId') ?? 0; // Get judge ID
-      return judgeId;
+  Future<void> login(String email, String password) async {
+    String result = await apiService.loginAdmin(email, password);
+    if (result == 'Login successful') {
+      _isAuthenticated = true;
+      notifyListeners();
     }
-    return 0;
   }
-  Future<void> saveJudgeLoginInfo(int judgeId) async {
+
+  Future<void> logout() async {
+    await apiService.clearTokens();
+    _isAuthenticated = false;
+    notifyListeners();
+  }
+
+  Future<void> checkAuthStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isJudgeLoggedIn', true);
-    prefs.setInt('judgeId', judgeId); // Save judge ID
+    _isAuthenticated = prefs.containsKey('accessToken');
+    notifyListeners();
   }
-
-  Future<void> clearLoginInfo() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear(); // Clear all saved data in SharedPreferences
-  }
-
 }

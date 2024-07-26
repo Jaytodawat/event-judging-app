@@ -16,10 +16,11 @@ class JudgeEventScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var eventListModel = Provider.of<EventListModel>(context, listen: true);
-    AuthProvider auth = Provider.of<AuthProvider>(context, listen: false);
+    Auth auth = Auth();
     Future<void> refreshEvents() async {
       await eventListModel.refresh(); // Call the method to fetch events again
     }
+
 
     return Scaffold(
       appBar: AppBar(
@@ -32,7 +33,7 @@ class JudgeEventScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout_outlined),
             onPressed: () async {
-              await auth.logout();
+              await auth.clearLoginInfo();
               if (context.mounted) {
                 Navigator.pushReplacement(
                   context,
